@@ -396,6 +396,10 @@ void MainWindow::detectPieces()
     const qint64 detectionTime = stepTimer.elapsed();
 
     stepTimer.restart();
+    updatePieceAnalyses();
+    const qint64 analysisTime = stepTimer.elapsed();
+
+    stepTimer.restart();
     showImage();
     const qint64 imageTime = stepTimer.elapsed();
 
@@ -412,21 +416,26 @@ void MainWindow::detectPieces()
     qInfo().noquote()
         << QStringLiteral(
                "JigsawFoundry: Erkennung=%1 ms, "
-               "Bild=%2 ms, "
-               "Ausrichtung/Darstellung=%3 ms, "
-               "Matching=%4 ms, "
-               "Gesamt=%5 ms")
+               "Kantenanalyse=%2 ms, "
+               "Bild=%3 ms, "
+               "Ausrichtung/Darstellung=%4 ms, "
+               "Matching=%5 ms, "
+               "Gesamt=%6 ms")
                .arg(detectionTime)
+               .arg(analysisTime)
                .arg(imageTime)
                .arg(alignmentTime)
                .arg(matchingTime)
                .arg(totalTime);
 
     statusBar()->showMessage(
-        tr("%1 Puzzleteile erkannt | Erkennung: %2 ms | "
-           "Darstellung: %3 ms | Matching: %4 ms | Gesamt: %5 ms")
+        tr("%1 Puzzleteile | Erkennung: %2 ms | "
+           "Kantenanalyse: %3 ms | "
+           "Darstellung: %4 ms | "
+           "Matching: %5 ms | Gesamt: %6 ms")
             .arg(pieces.size())
             .arg(detectionTime)
+            .arg(analysisTime)
             .arg(imageTime + alignmentTime)
             .arg(matchingTime)
             .arg(totalTime)
@@ -453,24 +462,12 @@ void MainWindow::showImage()
     const double lineWidth = std::max(1.5, 3.0 * factor);
     const int radius = std::max(5, static_cast<int>(17 * factor));
 
-    PuzzleEdgeDetector edgeDetector;
-
     const QTransform identity;
 
-    for (const PuzzlePiece& piece : pieces)
+    for (int pieceIndex = 0; pieceIndex < pieces.size(); ++pieceIndex)
     {
-        const double rotation =
-            edgeDetector.findRotation(piece.contour);
-
-        const PuzzleBaseLines lines =
-            edgeDetector.findBaseLines(piece.contour, rotation);
-
-        const PuzzleContourEdges edges =
-            edgeDetector.findContourEdges(
-                piece.contour,
-                rotation,
-                lines
-                );
+        const PuzzlePiece& piece = pieces[pieceIndex];
+        const PuzzleContourEdges& edges = pieceAnalyses[pieceIndex];
 
         if (edges.valid)
         {
@@ -533,8 +530,6 @@ void MainWindow::showAlignedPieces()
     if (image.isNull() || pieces.isEmpty())
         return;
 
-    PuzzleEdgeDetector edgeDetector;
-
     const int columns = 5;
     const double cellWidth = 260.0;
     const double cellHeight = 280.0;
@@ -542,30 +537,22 @@ void MainWindow::showAlignedPieces()
 
     int itemIndex = 0;
 
-    for (const PuzzlePiece& piece : pieces)
+    for (int pieceIndex = 0; pieceIndex < pieces.size(); ++pieceIndex)
     {
+        const PuzzlePiece& piece = pieces[pieceIndex];
+        const double rotation = pieceRotations[pieceIndex];
+        const PuzzleBaseLines& lines = pieceBaseLines[pieceIndex];
+        const PuzzleContourEdges& edges = pieceAnalyses[pieceIndex];
+
         QImage extracted = extractPiece(image, piece);
 
         if (extracted.isNull())
             continue;
 
-        const double rotation =
-            edgeDetector.findRotation(piece.contour);
-
         QImage rotated = rotatePiece(extracted, rotation);
 
         if (rotated.isNull())
             continue;
-
-        const PuzzleBaseLines lines =
-            edgeDetector.findBaseLines(piece.contour, rotation);
-
-        const PuzzleContourEdges edges =
-            edgeDetector.findContourEdges(
-                piece.contour,
-                rotation,
-                lines
-                );
 
         const QRect bounds = piece.contour.boundingRect()
                                  .adjusted(-2, -2, 2, 2)
@@ -747,25 +734,49 @@ void MainWindow::showAlignedPieces()
     }
 }
 
+void MainWindow::updatePieceAnalyses()
+{
+    pieceAnalyses.clear();
+    pieceRotations.clear();
+    pieceBaseLines.clear();
+
+    pieceAnalyses.reserve(pieces.size());
+    pieceRotations.reserve(pieces.size());
+    pieceBaseLines.reserve(pieces.size());
+
+    PuzzleEdgeDetector edgeDetector;
+
+    for (const PuzzlePiece& piece : pieces)
+    {
+        const double rotation =
+            edgeDetector.findRotation(piece.contour);
+
+        const PuzzleBaseLines lines =
+            edgeDetector.findBaseLines(piece.contour, rotation);
+
+        const PuzzleContourEdges edges =
+            edgeDetector.findContourEdges(
+                piece.contour,
+                rotation,
+                lines
+                );
+
+        pieceRotations.append(rotation);
+        pieceBaseLines.append(lines);
+        pieceAnalyses.append(edges);
+    }
+}
+
 void MainWindow::updateMatching()
 {
     matchingList->clear();
     matchingScene->clear();
-    pieceAnalyses.clear();
+    pieceRotations.clear();
+    pieceBaseLines.clear();
     matches.clear();
 
     if (pieces.isEmpty())
         return;
-
-    PuzzleEdgeDetector edgeDetector;
-    pieceAnalyses.reserve(pieces.size());
-
-    for (const PuzzlePiece& piece : pieces)
-    {
-        const double rotation = edgeDetector.findRotation(piece.contour);
-        const PuzzleBaseLines lines = edgeDetector.findBaseLines(piece.contour, rotation);
-        pieceAnalyses.append(edgeDetector.findContourEdges(piece.contour, rotation, lines));
-    }
 
     PuzzleEdgeMatcher matcher;
     matches = matcher.findMatches(pieces, pieceAnalyses, image);

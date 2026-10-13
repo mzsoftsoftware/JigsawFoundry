@@ -43,6 +43,11 @@ private:
     QGraphicsView* matchingView = nullptr;
 
     QVector<PuzzleContourEdges> pieceAnalyses;
+    QVector<double> pieceRotations;
+    QVector<PuzzleBaseLines> pieceBaseLines;
+
+    void updatePieceAnalyses();
+
     QVector<PuzzleEdgeMatch> matches;
 
     void highlightMatchingPieces(int matchIndex);
