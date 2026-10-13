@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_JigsawFoundry_FILE /home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/JigsawFoundry)
+set(__QT_DEPLOY_TARGET_JigsawFoundry_TYPE EXECUTABLE)
