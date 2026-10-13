@@ -13,26 +13,9 @@ namespace
 {
 constexpr int SampleCount = 64;
 constexpr double ColorWeight = 0.35;
-
-struct EdgeProfile
-{
-    QVector<double> values;
-    double length = 0.0;
-    bool valid = false;
-};
-
-struct LabColor
-{
-    double l = 0.0;
-    double a = 0.0;
-    double b = 0.0;
-};
-
-struct ColorProfile
-{
-    QVector<LabColor> values;
-    QVector<bool> valid;
-};
+using EdgeProfile = PuzzleEdgeGeometryProfile;
+using LabColor = PuzzleLabColor;
+using ColorProfile = PuzzleEdgeColorProfile;
 
 double distance(const QPointF& first, const QPointF& second)
 {
@@ -267,70 +250,28 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
     struct CandidateEdge
     {
         int imageIndex = -1;
-        int pieceIndex = -1;
-        int edgeIndex = -1;
-
-        EdgeProfile geometry;
-        ColorProfile colors;
+        const PuzzleCachedEdge* edge = nullptr;
     };
 
     QVector<CandidateEdge> outwardEdges;
     QVector<CandidateEdge> inwardEdges;
 
-    for (int imageIndex = 0; imageIndex < images.size(); ++imageIndex)
+    for (int imageIndex = 0;
+         imageIndex < images.size();
+         ++imageIndex)
     {
         const PuzzleImage& puzzleImage = images[imageIndex];
 
-        if (puzzleImage.image.isNull() ||
-            puzzleImage.pieces.size() != puzzleImage.analyses.size())
-            continue;
-
-        for (int pieceIndex = 0; pieceIndex < puzzleImage.pieces.size(); ++pieceIndex)
+        for (const PuzzleCachedEdge& edge : puzzleImage.cachedEdges)
         {
-            const PuzzlePiece& piece = puzzleImage.pieces[pieceIndex];
-            const PuzzleContourEdges& analysis = puzzleImage.analyses[pieceIndex];
+            CandidateEdge candidate;
+            candidate.imageIndex = imageIndex;
+            candidate.edge = &edge;
 
-            if (!analysis.usableForMatching)
-                continue;
-
-            const int count = std::min(
-                static_cast<int>(analysis.edges.size()),
-                static_cast<int>(analysis.classifications.size())
-                );
-
-            for (int edgeIndex = 0; edgeIndex < count; ++edgeIndex)
-            {
-                const PuzzleEdgeType type =
-                    analysis.classifications[edgeIndex].type;
-
-                if (type != PuzzleEdgeType::Outward &&
-                    type != PuzzleEdgeType::Inward)
-                    continue;
-
-                const QPolygonF& edge = analysis.edges[edgeIndex];
-
-                CandidateEdge candidate;
-
-                candidate.imageIndex = imageIndex;
-                candidate.pieceIndex = pieceIndex;
-                candidate.edgeIndex = edgeIndex;
-
-                candidate.geometry = createProfile(edge);
-
-                if (!candidate.geometry.valid)
-                    continue;
-
-                candidate.colors = createColorProfile(
-                    puzzleImage.image,
-                    edge,
-                    piece.center
-                    );
-
-                if (type == PuzzleEdgeType::Outward)
-                    outwardEdges.append(candidate);
-                else
-                    inwardEdges.append(candidate);
-            }
+            if (edge.type == PuzzleEdgeType::Outward)
+                outwardEdges.append(candidate);
+            else if (edge.type == PuzzleEdgeType::Inward)
+                inwardEdges.append(candidate);
         }
     }
 
@@ -338,26 +279,31 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
     {
         for (const CandidateEdge& second : inwardEdges)
         {
-            // Nur identische Teile ausschließen.
-            // Unterschiedliche Teile desselben Fotos sind erlaubt.
+            const PuzzleCachedEdge& firstEdge = *first.edge;
+            const PuzzleCachedEdge& secondEdge = *second.edge;
 
             if (first.imageIndex == second.imageIndex &&
-                first.pieceIndex == second.pieceIndex)
+                firstEdge.pieceIndex == secondEdge.pieceIndex)
                 continue;
 
-            const double geometry =
-                compareProfiles(first.geometry, second.geometry);
+            const double geometry = compareProfiles(
+                firstEdge.geometry,
+                secondEdge.geometry
+                );
 
             if (!std::isfinite(geometry) || geometry > 10.0)
                 continue;
 
-            const double color =
-                compareColors(first.colors, second.colors);
+            const double color = compareColors(
+                firstEdge.colors,
+                secondEdge.colors
+                );
 
             if (!std::isfinite(color) || color > 25.0)
                 continue;
 
-            const double score = geometry + ColorWeight * color;
+            const double score =
+                geometry + ColorWeight * color;
 
             if (score > 15.0)
                 continue;
@@ -365,17 +311,19 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
             PuzzleEdgeMatch match;
 
             match.firstImageIndex = first.imageIndex;
-            match.firstPieceIndex = first.pieceIndex;
-            match.firstEdgeIndex = first.edgeIndex;
+            match.firstPieceIndex = firstEdge.pieceIndex;
+            match.firstEdgeIndex = firstEdge.edgeIndex;
 
             match.secondImageIndex = second.imageIndex;
-            match.secondPieceIndex = second.pieceIndex;
-            match.secondEdgeIndex = second.edgeIndex;
+            match.secondPieceIndex = secondEdge.pieceIndex;
+            match.secondEdgeIndex = secondEdge.edgeIndex;
 
             match.geometryScore = geometry;
             match.colorScore = color;
+
             match.previousColorScore =
                 std::numeric_limits<double>::infinity();
+
             match.score = score;
 
             matches.append(match);
@@ -459,4 +407,71 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
         );
 
     return matches;
+}
+
+void PuzzleEdgeMatcher::prepareImage(
+    PuzzleImage& puzzleImage) const
+{
+    puzzleImage.cachedEdges.clear();
+
+    if (puzzleImage.image.isNull() ||
+        puzzleImage.pieces.size() != puzzleImage.analyses.size())
+        return;
+
+    puzzleImage.cachedEdges.reserve(
+        puzzleImage.pieces.size() * 4
+        );
+
+    for (int pieceIndex = 0;
+         pieceIndex < puzzleImage.pieces.size();
+         ++pieceIndex)
+    {
+        const PuzzlePiece& piece =
+            puzzleImage.pieces[pieceIndex];
+
+        const PuzzleContourEdges& analysis =
+            puzzleImage.analyses[pieceIndex];
+
+        if (!analysis.usableForMatching)
+            continue;
+
+        const int count = std::min(
+            static_cast<int>(analysis.edges.size()),
+            static_cast<int>(analysis.classifications.size())
+            );
+
+        for (int edgeIndex = 0;
+             edgeIndex < count;
+             ++edgeIndex)
+        {
+            const PuzzleEdgeType type =
+                analysis.classifications[edgeIndex].type;
+
+            if (type != PuzzleEdgeType::Outward &&
+                type != PuzzleEdgeType::Inward)
+                continue;
+
+            const QPolygonF& edge =
+                analysis.edges[edgeIndex];
+
+            PuzzleCachedEdge cachedEdge;
+
+            cachedEdge.pieceIndex = pieceIndex;
+            cachedEdge.edgeIndex = edgeIndex;
+            cachedEdge.type = type;
+
+            cachedEdge.geometry = createProfile(edge);
+
+            if (!cachedEdge.geometry.valid)
+                continue;
+
+            cachedEdge.colors = createColorProfile(
+                puzzleImage.image,
+                edge,
+                piece.center
+                );
+
+            puzzleImage.cachedEdges.append(cachedEdge);
+        }
+    }
 }

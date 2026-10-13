@@ -1192,6 +1192,14 @@ void MainWindow::updateOriginalHighlight(
 
 void MainWindow::analyzeImage(PuzzleImage& puzzleImage)
 {
+    puzzleImage.analyses.clear();
+    puzzleImage.rotations.clear();
+    puzzleImage.baseLines.clear();
+    puzzleImage.extractedPieces.clear();
+    puzzleImage.pieceThumbnails.clear();
+    puzzleImage.cachedEdges.clear();
+
+    // Der bisherige Code folgt.
     PuzzleDetector detector;
     PuzzleEdgeDetector edgeDetector;
 
@@ -1261,6 +1269,9 @@ void MainWindow::analyzeImage(PuzzleImage& puzzleImage)
                 )
             );
     }
+
+    PuzzleEdgeMatcher matcher;
+    matcher.prepareImage(puzzleImage);
 }
 
 void MainWindow::displayOriginalImage(

@@ -8,6 +8,38 @@
 #include <QString>
 #include <QVector>
 
+
+struct PuzzleEdgeGeometryProfile
+{
+    QVector<double> values;
+    double length = 0.0;
+    bool valid = false;
+};
+
+struct PuzzleLabColor
+{
+    double l = 0.0;
+    double a = 0.0;
+    double b = 0.0;
+};
+
+struct PuzzleEdgeColorProfile
+{
+    QVector<PuzzleLabColor> values;
+    QVector<bool> valid;
+};
+
+struct PuzzleCachedEdge
+{
+    int pieceIndex = -1;
+    int edgeIndex = -1;
+
+    PuzzleEdgeType type = PuzzleEdgeType::Unknown;
+
+    PuzzleEdgeGeometryProfile geometry;
+    PuzzleEdgeColorProfile colors;
+};
+
 struct PuzzleImage
 {
     QString filePath;
@@ -25,4 +57,6 @@ struct PuzzleImage
     QVector<QPixmap> pieceThumbnails;
 
     int usablePieces = 0;
+
+    QVector<PuzzleCachedEdge> cachedEdges;
 };

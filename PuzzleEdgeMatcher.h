@@ -25,6 +25,8 @@ struct PuzzleEdgeMatch
 class PuzzleEdgeMatcher
 {
 public:
+    void prepareImage(PuzzleImage& puzzleImage) const;
+
     QVector<PuzzleEdgeMatch> findMatches(
         const QVector<PuzzleImage>& images
         ) const;
