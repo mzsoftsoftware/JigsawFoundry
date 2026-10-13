@@ -2,6 +2,7 @@
 
 #include <QColor>
 #include <QPointF>
+#include <QTransform>
 
 #include <algorithm>
 #include <cmath>
@@ -227,6 +228,104 @@ double compareColors(const ColorProfile& outward, const ColorProfile& inward)
     }
     return count >= SampleCount / 2 ? error / count : std::numeric_limits<double>::infinity();
 }
+
+QPointF inwardNormal(const QPolygonF& edge, const QPointF& center)
+{
+    const QPointF start = edge.first();
+    const QPointF end = edge.last();
+    const QPointF chord = end - start;
+
+    const double length = std::hypot(chord.x(), chord.y());
+
+    if (length < 1e-9)
+        return QPointF();
+
+    const double cross =
+        chord.x() * (center.y() - start.y()) -
+        chord.y() * (center.x() - start.x());
+
+    const double sign = cross >= 0.0 ? 1.0 : -1.0;
+
+    return QPointF(
+        -chord.y() * sign / length,
+        chord.x() * sign / length
+        );
+}
+
+double compareAlignedColors(
+    const QImage& image,
+    const QPolygonF& firstEdge,
+    const QPointF& firstCenter,
+    const QPolygonF& secondEdge,
+    const QPointF& secondCenter)
+{
+    if (firstEdge.size() < 2 || secondEdge.size() < 2)
+        return std::numeric_limits<double>::infinity();
+
+    const QPointF firstNormal = inwardNormal(firstEdge, firstCenter);
+    const QPointF secondNormal = inwardNormal(secondEdge, secondCenter);
+
+    const double firstLength = distance(firstEdge.first(), firstEdge.last());
+    const double secondLength = distance(secondEdge.first(), secondEdge.last());
+
+    if (firstLength < 5.0 || secondLength < 5.0)
+        return std::numeric_limits<double>::infinity();
+
+    const double referenceLength = (firstLength + secondLength) * 0.5;
+
+    const double offsets[] = {
+        std::clamp(referenceLength * 0.02, 3.0, 8.0),
+        std::clamp(referenceLength * 0.04, 5.0, 12.0),
+        std::clamp(referenceLength * 0.07, 8.0, 18.0)
+    };
+
+    double totalError = 0.0;
+    int validPositions = 0;
+
+    for (int index = 0; index < SampleCount; ++index)
+    {
+        const double fraction = static_cast<double>(index) / (SampleCount - 1);
+
+        if (fraction < 0.08 || fraction > 0.92)
+            continue;
+
+        // Die zweite Kante wird in entgegengesetzter Richtung abgetastet.
+        const QPointF firstPoint = pointAtFraction(firstEdge, fraction);
+        const QPointF secondPoint = pointAtFraction(secondEdge, 1.0 - fraction);
+
+        double positionError = 0.0;
+        int validOffsets = 0;
+
+        for (const double offset : offsets)
+        {
+            LabColor firstColor;
+            LabColor secondColor;
+
+            if (!sampleLab(image, firstPoint + firstNormal * offset, firstColor))
+                continue;
+
+            if (!sampleLab(image, secondPoint + secondNormal * offset, secondColor))
+                continue;
+
+            const double dl = firstColor.l - secondColor.l;
+            const double da = firstColor.a - secondColor.a;
+            const double db = firstColor.b - secondColor.b;
+
+            positionError += std::sqrt(dl * dl + da * da + db * db);
+            ++validOffsets;
+        }
+
+        if (validOffsets == 0)
+            continue;
+
+        totalError += positionError / validOffsets;
+        ++validPositions;
+    }
+
+    return validPositions >= SampleCount / 2
+               ? totalError / validPositions
+               : std::numeric_limits<double>::infinity();
+}
 }
 
 double PuzzleEdgeMatcher::compareEdges(const QPolygonF& outward, const QPolygonF& inward) const
@@ -298,7 +397,16 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiec
             if (!std::isfinite(geometry))
                 continue;
 
-            const double color = compareColors(first.colors, second.colors);
+            const double previousColor = compareColors(first.colors, second.colors);
+
+            const double color = compareAlignedColors(
+                image,
+                analyses[first.pieceIndex].edges[first.edgeIndex],
+                pieces[first.pieceIndex].center,
+                analyses[second.pieceIndex].edges[second.edgeIndex],
+                pieces[second.pieceIndex].center
+                );
+
             if (!std::isfinite(color))
                 continue;
 
@@ -309,6 +417,7 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiec
             match.secondEdgeIndex = second.edgeIndex;
             match.geometryScore = geometry;
             match.colorScore = color;
+            match.previousColorScore = previousColor;
             match.score = geometry + ColorWeight * color;
 
             if (match.geometryScore > 10.0)
@@ -361,6 +470,18 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiec
 
         current.mutualBestMatch = bestForFirst && bestForSecond;
     }
+
+    std::stable_sort(
+        matches.begin(),
+        matches.end(),
+        [](const PuzzleEdgeMatch& first, const PuzzleEdgeMatch& second)
+        {
+            if (first.mutualBestMatch != second.mutualBestMatch)
+                return first.mutualBestMatch;
+
+            return first.score < second.score;
+        }
+        );
 
     return matches;
 }

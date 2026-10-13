@@ -15,6 +15,7 @@ struct PuzzleEdgeMatch
 
     double geometryScore = 0.0;
     double colorScore = 0.0;
+    double previousColorScore = 0.0;
     double score = 0.0;
 
     bool mutualBestMatch = false;

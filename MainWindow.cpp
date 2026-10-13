@@ -3,6 +3,9 @@
 #include "PuzzleEdgeDetector.h"
 #include "PuzzleEdgeMatcher.h"
 
+#include <QDir>
+#include <QSettings>
+#include <QFileInfo>
 #include <QGraphicsPolygonItem>
 #include <QListWidget>
 #include <QGraphicsLineItem>
@@ -322,10 +325,17 @@ MainWindow::MainWindow(QWidget* parent)
 
 void MainWindow::openImage()
 {
+    QSettings settings("MZ Software GmbH", "JigsawFoundry");
+
+    const QString lastDirectory = settings.value(
+                                              "Image/LastDirectory",
+                                              QDir::homePath()
+                                              ).toString();
+
     const QString path = QFileDialog::getOpenFileName(
         this,
         tr("Puzzlefoto öffnen"),
-        QString(),
+        lastDirectory,
         tr("Bilder (*.jpg *.jpeg *.png *.bmp)")
         );
 
@@ -339,6 +349,11 @@ void MainWindow::openImage()
         statusBar()->showMessage(tr("Das Bild konnte nicht geladen werden."));
         return;
     }
+
+    settings.setValue(
+        "Image/LastDirectory",
+        QFileInfo(path).absolutePath()
+        );
 
     image = loaded;
     pieces.clear();
@@ -729,17 +744,30 @@ void MainWindow::updateMatching()
                                    ? tr("★ ")
                                    : QString();
 
-        matchingList->addItem(
+        const QString text =
             prefix +
-            tr("Teil %1 / Kante %2  ↔  Teil %3 / Kante %4  |  G: %5  F: %6  Gesamt: %7")
+            tr("Teil %1 / Kante %2  ↔  Teil %3 / Kante %4  |  G: %5  F alt: %6  F neu: %7  Gesamt: %8")
                 .arg(first.id)
                 .arg(match.firstEdgeIndex + 1)
                 .arg(second.id)
                 .arg(match.secondEdgeIndex + 1)
                 .arg(match.geometryScore, 0, 'f', 2)
+                .arg(match.previousColorScore, 0, 'f', 2)
                 .arg(match.colorScore, 0, 'f', 2)
-                .arg(match.score, 0, 'f', 2)
-            );
+                .arg(match.score, 0, 'f', 2);
+
+        QListWidgetItem* item = new QListWidgetItem(text);
+
+        if (match.mutualBestMatch)
+        {
+            item->setForeground(QColor("#FFD600"));
+
+            QFont font = item->font();
+            font.setBold(true);
+            item->setFont(font);
+        }
+
+        matchingList->addItem(item);
     }
 
     if (maximumResults > 0)

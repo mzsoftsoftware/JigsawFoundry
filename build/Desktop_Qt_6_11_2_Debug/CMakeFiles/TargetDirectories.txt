@@ -1,0 +1,5 @@
+/home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/CMakeFiles/JigsawFoundry.dir
+/home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/CMakeFiles/edit_cache.dir
+/home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/CMakeFiles/rebuild_cache.dir
+/home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/CMakeFiles/JigsawFoundry_autogen_timestamp_deps.dir
+/home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/CMakeFiles/JigsawFoundry_autogen.dir
