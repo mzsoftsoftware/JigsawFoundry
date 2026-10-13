@@ -542,6 +542,7 @@ void MainWindow::openImage()
     firstMatchingHighlight = nullptr;
     secondMatchingHighlight = nullptr;
 
+    updateOriginalImages();
     detectPieces();
 }
 
@@ -605,6 +606,7 @@ void MainWindow::detectPieces()
 
     stepTimer.restart();
     updatePieceAnalyses();
+    updatePieceImageCache();
     const qint64 analysisTime = stepTimer.elapsed();
 
     updateImageList();
@@ -1039,7 +1041,16 @@ void MainWindow::updateMatching()
     }
 
     if (maximumResults > 0)
+    {
         matchingList->setCurrentRow(0);
+
+        showMatchingPreview(0);
+        highlightMatchingPieces(0);
+    }
+    else
+    {
+        highlightMatchingPieces(-1);
+    }
 
     statusBar()->showMessage(tr("%1 Puzzleteile, %2 mögliche Kantenpaare")
                                  .arg(pieces.size()).arg(matches.size()));
@@ -1063,8 +1074,11 @@ void MainWindow::showMatchingPreview(int matchIndex)
     if (firstEdge.size() < 2 || secondEdge.size() < 2)
         return;
 
-    const QImage firstImage = extractPiece(image, first);
-    const QImage secondImage = extractPiece(image, second);
+    const QImage& firstImage =
+        pieceImageCache[match.firstPieceIndex];
+
+    const QImage& secondImage =
+        pieceImageCache[match.secondPieceIndex];
 
     if (firstImage.isNull() || secondImage.isNull())
         return;
@@ -1152,84 +1166,14 @@ void MainWindow::highlightMatchingPieces(int matchIndex)
         }
     }
 
-    showOriginalImage(
-        scene,
-        view,
+    updateOriginalHighlight(
         firstMatchingHighlight,
-        first,
-        QColor("#00FFFF")
+        first
         );
 
-    showOriginalImage(
-        secondScene,
-        secondView,
+    updateOriginalHighlight(
         secondMatchingHighlight,
-        second,
-        QColor("#FF9800")
-        );
-}
-
-void MainWindow::showOriginalImage(
-    QGraphicsScene* targetScene,
-    QGraphicsView* targetView,
-    QGraphicsPolygonItem*& highlight,
-    const PuzzlePiece* selectedPiece,
-    const QColor& highlightColor)
-{
-    targetScene->clear();
-    highlight = nullptr;
-
-    if (image.isNull())
-        return;
-
-    QTransform transform;
-
-    if (image.height() > image.width())
-    {
-        transform.translate(image.height(), 0.0);
-        transform.rotate(90.0);
-    }
-
-    QGraphicsPixmapItem* pixmapItem =
-        targetScene->addPixmap(QPixmap::fromImage(image));
-
-    pixmapItem->setTransform(transform);
-
-    if (selectedPiece != nullptr)
-    {
-        QPolygonF contour =
-            transform.map(selectedPiece->contour);
-
-        const double lineWidth =
-            std::max(3.0, image.width() / 250.0);
-
-        highlight = targetScene->addPolygon(
-            contour,
-            QPen(
-                highlightColor,
-                lineWidth,
-                Qt::SolidLine,
-                Qt::RoundCap,
-                Qt::RoundJoin
-                ),
-            QColor(
-                highlightColor.red(),
-                highlightColor.green(),
-                highlightColor.blue(),
-                70
-                )
-            );
-
-        highlight->setZValue(10.0);
-    }
-
-    targetScene->setSceneRect(
-        transform.mapRect(QRectF(image.rect()))
-        );
-
-    targetView->fitInView(
-        targetScene->sceneRect(),
-        Qt::KeepAspectRatio
+        second
         );
 }
 
@@ -1246,4 +1190,103 @@ void MainWindow::fitOriginalImages()
             secondScene->sceneRect(),
             Qt::KeepAspectRatio
             );
+}
+
+void MainWindow::updateOriginalImages()
+{
+    scene->clear();
+    secondScene->clear();
+
+    firstImageItem = nullptr;
+    secondImageItem = nullptr;
+
+    firstMatchingHighlight = nullptr;
+    secondMatchingHighlight = nullptr;
+
+    originalPixmap = QPixmap();
+
+    if (image.isNull())
+        return;
+
+    originalPixmap = QPixmap::fromImage(image);
+
+    QTransform transform;
+
+    if (image.height() > image.width())
+    {
+        transform.translate(image.height(), 0.0);
+        transform.rotate(90.0);
+    }
+
+    firstImageItem = scene->addPixmap(originalPixmap);
+    secondImageItem = secondScene->addPixmap(originalPixmap);
+
+    firstImageItem->setTransform(transform);
+    secondImageItem->setTransform(transform);
+
+    firstMatchingHighlight =
+        new QGraphicsPolygonItem(firstImageItem);
+
+    secondMatchingHighlight =
+        new QGraphicsPolygonItem(secondImageItem);
+
+    firstMatchingHighlight->setPen(
+        QPen(QColor("#00FFFF"), 5.0)
+        );
+
+    firstMatchingHighlight->setBrush(
+        QColor(0, 255, 255, 100)
+        );
+
+    secondMatchingHighlight->setPen(
+        QPen(QColor("#FF9800"), 5.0)
+        );
+
+    secondMatchingHighlight->setBrush(
+        QColor(255, 152, 0, 100)
+        );
+
+    firstMatchingHighlight->setZValue(10.0);
+    secondMatchingHighlight->setZValue(10.0);
+
+    firstMatchingHighlight->hide();
+    secondMatchingHighlight->hide();
+
+    const QRectF bounds =
+        transform.mapRect(QRectF(image.rect()));
+
+    scene->setSceneRect(bounds);
+    secondScene->setSceneRect(bounds);
+
+    fitOriginalImages();
+}
+
+void MainWindow::updateOriginalHighlight(
+    QGraphicsPolygonItem* highlight,
+    const PuzzlePiece* piece)
+{
+    if (highlight == nullptr)
+        return;
+
+    if (piece == nullptr || piece->contour.isEmpty())
+    {
+        highlight->hide();
+        return;
+    }
+
+    highlight->setPolygon(piece->contour);
+    highlight->show();
+}
+
+void MainWindow::updatePieceImageCache()
+{
+    pieceImageCache.clear();
+    pieceImageCache.reserve(pieces.size());
+
+    for (const PuzzlePiece& piece : pieces)
+    {
+        pieceImageCache.append(
+            extractPiece(image, piece)
+            );
+    }
 }

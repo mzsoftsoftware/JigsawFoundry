@@ -13,6 +13,7 @@ class QGraphicsView;
 class QGraphicsPolygonItem;
 class QSplitter;
 class QCloseEvent;
+class QGraphicsPixmapItem;
 
 class MainWindow : public QMainWindow
 {
@@ -41,12 +42,11 @@ private:
     void restoreLayout();
     void saveLayout();
 
-    void showOriginalImage(
-        QGraphicsScene* targetScene,
-        QGraphicsView* targetView,
-        QGraphicsPolygonItem*& highlight,
-        const PuzzlePiece* selectedPiece,
-        const QColor& highlightColor
+    void updateOriginalImages();
+
+    void updateOriginalHighlight(
+        QGraphicsPolygonItem* highlight,
+        const PuzzlePiece* piece
         );
 
     void fitOriginalImages();
@@ -82,4 +82,14 @@ private:
 
     QGraphicsPolygonItem* firstMatchingHighlight = nullptr;
     QGraphicsPolygonItem* secondMatchingHighlight = nullptr;
+
+    QPixmap originalPixmap;
+
+    QGraphicsPixmapItem* firstImageItem = nullptr;
+    QGraphicsPixmapItem* secondImageItem = nullptr;
+
+
+    QVector<QImage> pieceImageCache;
+
+    void updatePieceImageCache();
 };
