@@ -325,8 +325,8 @@ CMakeFiles/JigsawFoundry.dir/JigsawFoundry_autogen/mocs_compilation.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qvector.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/JigsawFoundry_autogen/EWIEGA46WW/../../../../PuzzleEdgeMatcher.h \
- /home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/JigsawFoundry_autogen/EWIEGA46WW/../../../../PuzzleEdgeDetector.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/JigsawFoundry_autogen/EWIEGA46WW/../../../../PuzzleImage.h \
+ /home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/JigsawFoundry_autogen/EWIEGA46WW/../../../../PuzzleEdgeDetector.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPixmap \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixmap.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qshareddata.h \

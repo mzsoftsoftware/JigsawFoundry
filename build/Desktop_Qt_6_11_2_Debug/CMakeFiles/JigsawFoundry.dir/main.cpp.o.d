@@ -324,8 +324,8 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qvector.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h \
- /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleImage.h \
+ /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPixmap \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixmap.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qshareddata.h \

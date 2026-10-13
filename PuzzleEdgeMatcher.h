@@ -1,9 +1,7 @@
 #pragma once
 
-#include "PuzzleDetector.h"
-#include "PuzzleEdgeDetector.h"
+#include "PuzzleImage.h"
 
-#include <QImage>
 #include <QVector>
 
 struct PuzzleEdgeMatch
@@ -27,7 +25,7 @@ struct PuzzleEdgeMatch
 class PuzzleEdgeMatcher
 {
 public:
-    QVector<PuzzleEdgeMatch> findMatches(const QVector<PuzzlePiece>& pieces, const QVector<PuzzleContourEdges>& analyses, const QImage& image) const;
-
-private:
+    QVector<PuzzleEdgeMatch> findMatches(
+        const QVector<PuzzleImage>& images
+        ) const;
 };

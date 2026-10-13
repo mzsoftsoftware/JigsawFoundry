@@ -3,6 +3,7 @@
 #include <QColor>
 #include <QPointF>
 #include <QHash>
+#include <QMap>
 
 #include <algorithm>
 #include <cmath>
@@ -259,19 +260,16 @@ double compareColors(const ColorProfile& outward, const ColorProfile& inward)
 
 
 QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
-    const QVector<PuzzlePiece>& pieces,
-    const QVector<PuzzleContourEdges>& analyses,
-    const QImage& image) const
+    const QVector<PuzzleImage>& images) const
 {
     QVector<PuzzleEdgeMatch> matches;
 
-    if (pieces.size() != analyses.size() || image.isNull())
-        return matches;
-
     struct CandidateEdge
     {
+        int imageIndex = -1;
         int pieceIndex = -1;
         int edgeIndex = -1;
+
         EdgeProfile geometry;
         ColorProfile colors;
     };
@@ -279,47 +277,60 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
     QVector<CandidateEdge> outwardEdges;
     QVector<CandidateEdge> inwardEdges;
 
-    for (int pieceIndex = 0; pieceIndex < pieces.size(); ++pieceIndex)
+    for (int imageIndex = 0; imageIndex < images.size(); ++imageIndex)
     {
-        const PuzzleContourEdges& analysis = analyses[pieceIndex];
+        const PuzzleImage& puzzleImage = images[imageIndex];
 
-        if (!analysis.usableForMatching)
+        if (puzzleImage.image.isNull() ||
+            puzzleImage.pieces.size() != puzzleImage.analyses.size())
             continue;
 
-        const int count = std::min(
-            static_cast<int>(analysis.edges.size()),
-            static_cast<int>(analysis.classifications.size())
-            );
-
-        for (int edgeIndex = 0; edgeIndex < count; ++edgeIndex)
+        for (int pieceIndex = 0; pieceIndex < puzzleImage.pieces.size(); ++pieceIndex)
         {
-            const PuzzleEdgeType type =
-                analysis.classifications[edgeIndex].type;
+            const PuzzlePiece& piece = puzzleImage.pieces[pieceIndex];
+            const PuzzleContourEdges& analysis = puzzleImage.analyses[pieceIndex];
 
-            if (type != PuzzleEdgeType::Outward &&
-                type != PuzzleEdgeType::Inward)
+            if (!analysis.usableForMatching)
                 continue;
 
-            const QPolygonF& edge = analysis.edges[edgeIndex];
-
-            CandidateEdge candidate;
-            candidate.pieceIndex = pieceIndex;
-            candidate.edgeIndex = edgeIndex;
-            candidate.geometry = createProfile(edge);
-
-            if (!candidate.geometry.valid)
-                continue;
-
-            candidate.colors = createColorProfile(
-                image,
-                edge,
-                pieces[pieceIndex].center
+            const int count = std::min(
+                static_cast<int>(analysis.edges.size()),
+                static_cast<int>(analysis.classifications.size())
                 );
 
-            if (type == PuzzleEdgeType::Outward)
-                outwardEdges.append(candidate);
-            else
-                inwardEdges.append(candidate);
+            for (int edgeIndex = 0; edgeIndex < count; ++edgeIndex)
+            {
+                const PuzzleEdgeType type =
+                    analysis.classifications[edgeIndex].type;
+
+                if (type != PuzzleEdgeType::Outward &&
+                    type != PuzzleEdgeType::Inward)
+                    continue;
+
+                const QPolygonF& edge = analysis.edges[edgeIndex];
+
+                CandidateEdge candidate;
+
+                candidate.imageIndex = imageIndex;
+                candidate.pieceIndex = pieceIndex;
+                candidate.edgeIndex = edgeIndex;
+
+                candidate.geometry = createProfile(edge);
+
+                if (!candidate.geometry.valid)
+                    continue;
+
+                candidate.colors = createColorProfile(
+                    puzzleImage.image,
+                    edge,
+                    piece.center
+                    );
+
+                if (type == PuzzleEdgeType::Outward)
+                    outwardEdges.append(candidate);
+                else
+                    inwardEdges.append(candidate);
+            }
         }
     }
 
@@ -327,7 +338,11 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
     {
         for (const CandidateEdge& second : inwardEdges)
         {
-            if (first.pieceIndex == second.pieceIndex)
+            // Nur identische Teile ausschließen.
+            // Unterschiedliche Teile desselben Fotos sind erlaubt.
+
+            if (first.imageIndex == second.imageIndex &&
+                first.pieceIndex == second.pieceIndex)
                 continue;
 
             const double geometry =
@@ -348,10 +363,15 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
                 continue;
 
             PuzzleEdgeMatch match;
+
+            match.firstImageIndex = first.imageIndex;
             match.firstPieceIndex = first.pieceIndex;
             match.firstEdgeIndex = first.edgeIndex;
+
+            match.secondImageIndex = second.imageIndex;
             match.secondPieceIndex = second.pieceIndex;
             match.secondEdgeIndex = second.edgeIndex;
+
             match.geometryScore = geometry;
             match.colorScore = color;
             match.previousColorScore =
@@ -371,22 +391,43 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
         }
         );
 
-    // Die Treffer sind bereits aufsteigend nach Score sortiert.
-    // Die erste gefundene Verwendung einer Kante ist deshalb
-    // automatisch deren bester Treffer.
+    // Für Mutual-Best benötigen wir eine eindeutige
+    // Identifikation aus Bild, Teil und Kante.
 
-    QHash<quint64, double> bestOutward;
-    QHash<quint64, double> bestInward;
+    struct EdgeKey
+    {
+        int imageIndex = -1;
+        int pieceIndex = -1;
+        int edgeIndex = -1;
+
+        bool operator<(const EdgeKey& other) const
+        {
+            if (imageIndex != other.imageIndex)
+                return imageIndex < other.imageIndex;
+
+            if (pieceIndex != other.pieceIndex)
+                return pieceIndex < other.pieceIndex;
+
+            return edgeIndex < other.edgeIndex;
+        }
+    };
+
+    QMap<EdgeKey, double> bestOutward;
+    QMap<EdgeKey, double> bestInward;
 
     for (PuzzleEdgeMatch& match : matches)
     {
-        const quint64 outwardKey =
-            (static_cast<quint64>(match.firstPieceIndex) << 32) |
-            static_cast<quint32>(match.firstEdgeIndex);
+        const EdgeKey outwardKey {
+            match.firstImageIndex,
+            match.firstPieceIndex,
+            match.firstEdgeIndex
+        };
 
-        const quint64 inwardKey =
-            (static_cast<quint64>(match.secondPieceIndex) << 32) |
-            static_cast<quint32>(match.secondEdgeIndex);
+        const EdgeKey inwardKey {
+            match.secondImageIndex,
+            match.secondPieceIndex,
+            match.secondEdgeIndex
+        };
 
         const bool firstIsBest =
             !bestOutward.contains(outwardKey) ||

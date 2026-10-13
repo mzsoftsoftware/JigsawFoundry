@@ -489,6 +489,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h \
+  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleImage.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDebug \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDir \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QElapsedTimer \
@@ -500,6 +501,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QSettings \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QSize \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QSizeF \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QString \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q17memory.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q20bit.h \
@@ -2410,7 +2412,9 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h \
+  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleImage.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QPointF \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QString \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q17memory.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q20bit.h \
@@ -2551,6 +2555,7 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qxptype_traits.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qyieldcpu.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPixmap \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPolygonF \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qaction.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qbitmap.h \
