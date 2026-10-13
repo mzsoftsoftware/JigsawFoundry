@@ -502,6 +502,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QSize \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QSizeF \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QString \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QTimer \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q17memory.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q20bit.h \
@@ -637,6 +638,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtenvironmentvariables.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtextstream.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtformat_impl.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtimer.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtimezone.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtmetamacros.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtnoop.h \
@@ -665,6 +667,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPen \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPixmap \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPolygonF \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QResizeEvent \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QTransform \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QWheelEvent \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qaction.h \
@@ -3062,8 +3065,6 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qnativeinterface.h:
 
-/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qlocale.h:
-
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qitemselectionmodel.h:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qfileinfo.h:
@@ -3093,6 +3094,10 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcoreapplication.h:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qabstractitemmodel.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qlocale.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QTimer:
 
 /usr/include/opencv5/opencv2/core/matx.hpp:
 
@@ -3211,6 +3216,8 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 /usr/include/c++/16/tr1/special_function_util.h:
 
 /usr/include/c++/16/tr1/riemann_zeta.tcc:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QResizeEvent:
 
 /usr/include/c++/16/tr1/poly_hermite.tcc:
 
@@ -4149,6 +4156,8 @@ JigsawFoundry_autogen/EWIEGA46WW/moc_MainWindow.cpp:
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qatomic.h:
 
 /usr/include/c++/16/bits/alloc_traits.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtimer.h:
 
 /usr/include/bits/types/struct_timeval.h:
 

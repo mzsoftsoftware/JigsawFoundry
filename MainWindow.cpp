@@ -3,6 +3,9 @@
 #include "PuzzleEdgeDetector.h"
 #include "PuzzleEdgeMatcher.h"
 
+#include <QResizeEvent>
+#include <QTimer>
+
 #include <QCloseEvent>
 #include <QGroupBox>
 #include <QLabel>
@@ -1119,6 +1122,11 @@ void MainWindow::highlightMatchingPieces(int matchIndex)
             );
 
         displayedFirstImageIndex = match.firstImageIndex;
+
+        view->fitInView(
+            scene->sceneRect(),
+            Qt::KeepAspectRatio
+            );
     }
 
     if (displayedSecondImageIndex != match.secondImageIndex)
@@ -1132,6 +1140,11 @@ void MainWindow::highlightMatchingPieces(int matchIndex)
             );
 
         displayedSecondImageIndex = match.secondImageIndex;
+
+        secondView->fitInView(
+            secondScene->sceneRect(),
+            Qt::KeepAspectRatio
+            );
     }
 
     updateOriginalHighlight(
@@ -1306,4 +1319,14 @@ void MainWindow::displayOriginalImage(
             QRectF(puzzleImage.image.rect())
             )
         );
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+
+    QTimer::singleShot(0, this, [this]()
+                       {
+                           fitOriginalImages();
+                       });
 }

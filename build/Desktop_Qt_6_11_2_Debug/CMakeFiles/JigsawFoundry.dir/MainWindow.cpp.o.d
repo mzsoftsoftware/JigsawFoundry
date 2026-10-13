@@ -385,7 +385,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qcursor.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qbitmap.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qtabwidget.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QCloseEvent \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QResizeEvent \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qevent.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcoreevent.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qbasictimer.h \
@@ -414,6 +414,9 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qinputmethod.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qlocale.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qguiapplication_platform.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QTimer \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtimer.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QCloseEvent \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGroupBox \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgroupbox.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qframe.h \
