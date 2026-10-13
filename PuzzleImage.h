@@ -48,6 +48,10 @@ struct PuzzleImage
     QPixmap pixmap;
     QPixmap thumbnail;
 
+    double typicalEdgeLength = 0.0;
+    double scaleFactor = 1.0;
+    bool scaleValid = false;
+
     QVector<PuzzlePiece> pieces;
     QVector<PuzzleContourEdges> analyses;
     QVector<double> rotations;

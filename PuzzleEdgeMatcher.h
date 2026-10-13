@@ -15,6 +15,7 @@ struct PuzzleEdgeMatch
     int secondEdgeIndex = -1;
 
     double geometryScore = 0.0;
+    double contourScore = 0.0;
     double colorScore = 0.0;
     double previousColorScore = 0.0;
     double score = 0.0;
@@ -30,4 +31,6 @@ public:
     QVector<PuzzleEdgeMatch> findMatches(
         const QVector<PuzzleImage>& images
         ) const;
+
+    void calibrateImages(QVector<PuzzleImage>& images) const;
 };

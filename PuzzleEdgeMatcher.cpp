@@ -17,6 +17,48 @@ using EdgeProfile = PuzzleEdgeGeometryProfile;
 using LabColor = PuzzleLabColor;
 using ColorProfile = PuzzleEdgeColorProfile;
 
+double calculateTypicalEdgeLength(const PuzzleImage& puzzleImage)
+{
+    QVector<double> lengths;
+
+    for (const PuzzleContourEdges& analysis : puzzleImage.analyses)
+    {
+        if (!analysis.valid || !analysis.usableForMatching)
+            continue;
+
+        if (analysis.edges.size() != 4)
+            continue;
+
+        for (const QPolygonF& edge : analysis.edges)
+        {
+            if (edge.size() < 2)
+                continue;
+
+            const QPointF difference = edge.last() - edge.first();
+
+            const double length = std::hypot(
+                difference.x(),
+                difference.y()
+                );
+
+            if (length >= 5.0)
+                lengths.append(length);
+        }
+    }
+
+    if (lengths.size() < 8)
+        return 0.0;
+
+    std::sort(lengths.begin(), lengths.end());
+
+    const int middle = lengths.size() / 2;
+
+    if (lengths.size() % 2 == 0)
+        return (lengths[middle - 1] + lengths[middle]) * 0.5;
+
+    return lengths[middle];
+}
+
 double distance(const QPointF& first, const QPointF& second)
 {
     return std::hypot(second.x() - first.x(), second.y() - first.y());
@@ -103,6 +145,61 @@ double compareProfiles(const EdgeProfile& first, const EdgeProfile& second)
 
     return std::sqrt(squaredError / SampleCount) * 100.0
            + lengthDifference * 100.0;
+}
+
+double compareContours(
+    const EdgeProfile& first,
+    const EdgeProfile& second)
+{
+    if (!first.valid || !second.valid ||
+        first.values.size() != SampleCount ||
+        second.values.size() != SampleCount)
+    {
+        return std::numeric_limits<double>::infinity();
+    }
+
+    const double averageLength =
+        (first.length + second.length) * 0.5;
+
+    if (averageLength <= 0.0)
+        return std::numeric_limits<double>::infinity();
+
+    const double lengthDifference =
+        std::abs(first.length - second.length) / averageLength;
+
+    if (lengthDifference > 0.20)
+        return std::numeric_limits<double>::infinity();
+
+    QVector<double> errors;
+    errors.reserve(SampleCount);
+
+    for (int index = 0; index < SampleCount; ++index)
+    {
+        const double difference =
+            first.values[index] +
+            second.values[SampleCount - 1 - index];
+
+        errors.append(std::abs(difference));
+    }
+
+    std::sort(errors.begin(), errors.end());
+
+    // Die größten 10 % der Abweichungen ignorieren.
+    // Dadurch beeinflussen einzelne Konturfehler
+    // den neuen Vergleich weniger stark.
+
+    const int retainedCount =
+        SampleCount - SampleCount / 10;
+
+    double squaredError = 0.0;
+
+    for (int index = 0; index < retainedCount; ++index)
+        squaredError += errors[index] * errors[index];
+
+    const double contourError =
+        std::sqrt(squaredError / retainedCount) * 100.0;
+
+    return contourError + lengthDifference * 100.0;
 }
 
 QPointF pointAtFraction(const QPolygonF& contour, double fraction)
@@ -291,6 +388,11 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
                 secondEdge.geometry
                 );
 
+            const double contour = compareContours(
+                firstEdge.geometry,
+                secondEdge.geometry
+                );
+
             if (!std::isfinite(geometry) || geometry > 10.0)
                 continue;
 
@@ -319,6 +421,7 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
             match.secondEdgeIndex = secondEdge.edgeIndex;
 
             match.geometryScore = geometry;
+            match.contourScore = contour;
             match.colorScore = color;
 
             match.previousColorScore =
@@ -412,6 +515,14 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
 void PuzzleEdgeMatcher::prepareImage(
     PuzzleImage& puzzleImage) const
 {
+    puzzleImage.typicalEdgeLength =
+        calculateTypicalEdgeLength(puzzleImage);
+
+    puzzleImage.scaleFactor = 1.0;
+
+    puzzleImage.scaleValid =
+        puzzleImage.typicalEdgeLength > 0.0;
+
     puzzleImage.cachedEdges.clear();
 
     if (puzzleImage.image.isNull() ||
@@ -473,5 +584,30 @@ void PuzzleEdgeMatcher::prepareImage(
 
             puzzleImage.cachedEdges.append(cachedEdge);
         }
+    }
+}
+
+void PuzzleEdgeMatcher::calibrateImages(QVector<PuzzleImage>& images) const
+{
+    double referenceLength = 0.0;
+
+    for (const PuzzleImage& puzzleImage : images)
+    {
+        if (puzzleImage.scaleValid)
+        {
+            referenceLength = puzzleImage.typicalEdgeLength;
+            break;
+        }
+    }
+
+    for (PuzzleImage& puzzleImage : images)
+    {
+        puzzleImage.scaleFactor = 1.0;
+
+        if (!puzzleImage.scaleValid || referenceLength <= 0.0)
+            continue;
+
+        puzzleImage.scaleFactor =
+            referenceLength / puzzleImage.typicalEdgeLength;
     }
 }

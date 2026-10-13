@@ -857,6 +857,7 @@ void MainWindow::updateMatching()
     matches.clear();
 
     PuzzleEdgeMatcher matcher;
+    matcher.calibrateImages(images);
     matches = matcher.findMatches(images);
 
     const int maximumResults =
@@ -876,7 +877,9 @@ void MainWindow::updateMatching()
         const QString secondName = QFileInfo(secondImage.filePath).fileName();
 
         const QString description =
-            tr("%1: Teil %2 / Kante %3\n%4: Teil %5 / Kante %6\nG: %7  F: %8  Gesamt: %9")
+            tr("%1: Teil %2 / Kante %3\n"
+               "%4: Teil %5 / Kante %6\n"
+               "G: %7  K: %8  F: %9  Gesamt: %10")
                 .arg(firstName)
                 .arg(first.id)
                 .arg(match.firstEdgeIndex + 1)
@@ -884,6 +887,7 @@ void MainWindow::updateMatching()
                 .arg(second.id)
                 .arg(match.secondEdgeIndex + 1)
                 .arg(match.geometryScore, 0, 'f', 2)
+                .arg(match.contourScore, 0, 'f', 2)
                 .arg(match.colorScore, 0, 'f', 2)
                 .arg(match.score, 0, 'f', 2);
 
@@ -982,17 +986,11 @@ void MainWindow::showMatchingPreview(int matchIndex)
         match.secondPieceIndex >= secondSource.pieces.size())
         return;
 
-    const PuzzlePiece& first =
-        firstSource.pieces[match.firstPieceIndex];
+    const PuzzlePiece& first = firstSource.pieces[match.firstPieceIndex];
+    const PuzzlePiece& second = secondSource.pieces[match.secondPieceIndex];
 
-    const PuzzlePiece& second =
-        secondSource.pieces[match.secondPieceIndex];
-
-    const PuzzleContourEdges& firstAnalysis =
-        firstSource.analyses[match.firstPieceIndex];
-
-    const PuzzleContourEdges& secondAnalysis =
-        secondSource.analyses[match.secondPieceIndex];
+    const PuzzleContourEdges& firstAnalysis = firstSource.analyses[match.firstPieceIndex];
+    const PuzzleContourEdges& secondAnalysis = secondSource.analyses[match.secondPieceIndex];
 
     if (match.firstEdgeIndex < 0 ||
         match.firstEdgeIndex >= firstAnalysis.edges.size() ||
@@ -1000,47 +998,79 @@ void MainWindow::showMatchingPreview(int matchIndex)
         match.secondEdgeIndex >= secondAnalysis.edges.size())
         return;
 
-    const QPolygonF& firstEdge =
-        firstAnalysis.edges[match.firstEdgeIndex];
-
-    const QPolygonF& secondEdge =
-        secondAnalysis.edges[match.secondEdgeIndex];
+    const QPolygonF& firstEdge = firstAnalysis.edges[match.firstEdgeIndex];
+    const QPolygonF& secondEdge = secondAnalysis.edges[match.secondEdgeIndex];
 
     if (firstEdge.size() < 2 || secondEdge.size() < 2)
         return;
 
-    const QImage& firstImage =
-        firstSource.extractedPieces[match.firstPieceIndex];
-
-    const QImage& secondImage =
-        secondSource.extractedPieces[match.secondPieceIndex];
+    const QImage& firstImage = firstSource.extractedPieces[match.firstPieceIndex];
+    const QImage& secondImage = secondSource.extractedPieces[match.secondPieceIndex];
 
     if (firstImage.isNull() || secondImage.isNull())
         return;
+
+    // ------------------------------------------------------------
+    // 1. Beide Teile anhand der Kanten ausrichten
+    // ------------------------------------------------------------
 
     const QPointF firstStart = firstEdge.first();
     const QPointF firstEnd = firstEdge.last();
     const QPointF secondStart = secondEdge.first();
     const QPointF secondEnd = secondEdge.last();
 
-    const double firstAngle = std::atan2(firstStart.y() - firstEnd.y(), firstStart.x() - firstEnd.x());
-    const double secondAngle = std::atan2(secondEnd.y() - secondStart.y(), secondEnd.x() - secondStart.x());
+    const double firstAngle = std::atan2(
+        firstStart.y() - firstEnd.y(),
+        firstStart.x() - firstEnd.x()
+        );
+
+    const double secondAngle = std::atan2(
+        secondEnd.y() - secondStart.y(),
+        secondEnd.x() - secondStart.x()
+        );
 
     QTransform secondRotation;
     secondRotation.rotateRadians(firstAngle - secondAngle);
 
     const QPointF firstOffset = -first.center;
-    const QPointF secondOffset = firstEnd + firstOffset - secondRotation.map(secondStart);
+    const QPointF secondOffset =
+        firstEnd + firstOffset - secondRotation.map(secondStart);
 
-    const QRect firstBounds = first.contour.boundingRect().adjusted(-2, -2, 2, 2).toAlignedRect().intersected(firstSource.image.rect());
-    const QRect secondBounds = second.contour.boundingRect().adjusted(-2, -2, 2, 2).toAlignedRect().intersected(secondSource.image.rect());
+    const QRect firstBounds = first.contour.boundingRect()
+                                  .adjusted(-2, -2, 2, 2)
+                                  .toAlignedRect()
+                                  .intersected(firstSource.image.rect());
 
-    QGraphicsPixmapItem* firstItem = matchingScene->addPixmap(QPixmap::fromImage(firstImage));
+    const QRect secondBounds = second.contour.boundingRect()
+                                   .adjusted(-2, -2, 2, 2)
+                                   .toAlignedRect()
+                                   .intersected(secondSource.image.rect());
+
+    // ------------------------------------------------------------
+    // 2. Halbtransparente Puzzleteile anzeigen
+    // ------------------------------------------------------------
+
+    QGraphicsPixmapItem* firstItem =
+        matchingScene->addPixmap(QPixmap::fromImage(firstImage));
+
     firstItem->setPos(QPointF(firstBounds.topLeft()) + firstOffset);
+    firstItem->setOpacity(0.75);
+    firstItem->setZValue(1.0);
 
-    QGraphicsPixmapItem* secondItem = matchingScene->addPixmap(QPixmap::fromImage(secondImage));
+    QGraphicsPixmapItem* secondItem =
+        matchingScene->addPixmap(QPixmap::fromImage(secondImage));
+
     secondItem->setTransform(secondRotation);
-    secondItem->setPos(secondRotation.map(QPointF(secondBounds.topLeft())) + secondOffset);
+    secondItem->setPos(
+        secondRotation.map(QPointF(secondBounds.topLeft())) + secondOffset
+        );
+
+    secondItem->setOpacity(0.65);
+    secondItem->setZValue(2.0);
+
+    // ------------------------------------------------------------
+    // 3. Beide Kanten ins gemeinsame Koordinatensystem bringen
+    // ------------------------------------------------------------
 
     QPolygonF firstPreviewEdge;
     QPolygonF secondPreviewEdge;
@@ -1051,33 +1081,216 @@ void MainWindow::showMatchingPreview(int matchIndex)
     for (const QPointF& point : secondEdge)
         secondPreviewEdge.append(secondRotation.map(point) + secondOffset);
 
-    QGraphicsPathItem* firstLine = matchingScene->addPath(QPainterPath(), QPen(QColor("#00E5FF"), 3.0));
+    // ------------------------------------------------------------
+    // 4. Kanten zeichnen
+    // ------------------------------------------------------------
+
     QPainterPath firstPath;
     firstPath.moveTo(firstPreviewEdge.first());
+
     for (int index = 1; index < firstPreviewEdge.size(); ++index)
         firstPath.lineTo(firstPreviewEdge[index]);
-    firstLine->setPath(firstPath);
+
+    QPen firstPen(QColor("#00E5FF"), 2.5);
+    firstPen.setCosmetic(true);
+
+    QGraphicsPathItem* firstLine =
+        matchingScene->addPath(firstPath, firstPen);
+
     firstLine->setZValue(10.0);
 
-    QGraphicsPathItem* secondLine = matchingScene->addPath(QPainterPath(), QPen(QColor("#FF9100"), 3.0));
     QPainterPath secondPath;
     secondPath.moveTo(secondPreviewEdge.first());
+
     for (int index = 1; index < secondPreviewEdge.size(); ++index)
         secondPath.lineTo(secondPreviewEdge[index]);
-    secondLine->setPath(secondPath);
-    secondLine->setZValue(10.0);
 
-    QGraphicsTextItem* firstLabel = matchingScene->addText(tr("Teil %1 – Nase").arg(first.id));
+    QPen secondPen(QColor("#FF9100"), 2.5);
+    secondPen.setCosmetic(true);
+
+    QGraphicsPathItem* secondLine =
+        matchingScene->addPath(secondPath, secondPen);
+
+    secondLine->setZValue(11.0);
+
+    // ------------------------------------------------------------
+    // 5. Entsprechende Punkte entlang der Kanten bestimmen
+    // ------------------------------------------------------------
+
+    const int sampleCount = 32;
+
+    const double firstLength = [&firstPreviewEdge]()
+    {
+        double length = 0.0;
+
+        for (int index = 1; index < firstPreviewEdge.size(); ++index)
+        {
+            const QPointF difference =
+                firstPreviewEdge[index] - firstPreviewEdge[index - 1];
+
+            length += std::hypot(difference.x(), difference.y());
+        }
+
+        return length;
+    }();
+
+    const double secondLength = [&secondPreviewEdge]()
+    {
+        double length = 0.0;
+
+        for (int index = 1; index < secondPreviewEdge.size(); ++index)
+        {
+            const QPointF difference =
+                secondPreviewEdge[index] - secondPreviewEdge[index - 1];
+
+            length += std::hypot(difference.x(), difference.y());
+        }
+
+        return length;
+    }();
+
+    const double averageLength = (firstLength + secondLength) * 0.5;
+
+    const double warningDistance = averageLength * 0.015;
+    const double errorDistance = averageLength * 0.035;
+
+    const double firstStartToEnd = firstLength;
+    const double secondStartToEnd = secondLength;
+
+    const QPointF firstFallback = firstPreviewEdge.first();
+    const QPointF secondFallback = secondPreviewEdge.last();
+
+    const int firstCount = firstPreviewEdge.size();
+    const int secondCount = secondPreviewEdge.size();
+
+    const QPolygonF& firstPoints = firstPreviewEdge;
+    const QPolygonF& secondPoints = secondPreviewEdge;
+
+    const double firstTotal = firstStartToEnd;
+    const double secondTotal = secondStartToEnd;
+
+    // Hilfsfunktion: Punkt anhand der relativen Bogenlänge bestimmen.
+    const auto pointAtFraction = [](
+                                     const QPolygonF& points,
+                                     double fraction,
+                                     double totalLength) -> QPointF
+    {
+        if (points.isEmpty())
+            return QPointF();
+
+        if (fraction <= 0.0)
+            return points.first();
+
+        if (fraction >= 1.0)
+            return points.last();
+
+        const double target = fraction * totalLength;
+        double traveled = 0.0;
+
+        for (int index = 1; index < points.size(); ++index)
+        {
+            const QPointF start = points[index - 1];
+            const QPointF end = points[index];
+            const QPointF delta = end - start;
+
+            const double segmentLength =
+                std::hypot(delta.x(), delta.y());
+
+            if (traveled + segmentLength >= target)
+            {
+                const double t = segmentLength > 1e-9
+                                     ? (target - traveled) / segmentLength
+                                     : 0.0;
+
+                return start + delta * t;
+            }
+
+            traveled += segmentLength;
+        }
+
+        return points.last();
+    };
+
+    // ------------------------------------------------------------
+    // 6. Abweichungen zwischen den Konturen anzeigen
+    // ------------------------------------------------------------
+
+    for (int index = 1; index < sampleCount - 1; ++index)
+    {
+        const double fraction =
+            static_cast<double>(index) / (sampleCount - 1);
+
+        const QPointF firstPoint =
+            pointAtFraction(firstPoints, fraction, firstTotal);
+
+        // Die zweite Kante läuft in Gegenrichtung.
+        const QPointF secondPoint =
+            pointAtFraction(secondPoints, 1.0 - fraction, secondTotal);
+
+        const QPointF difference = secondPoint - firstPoint;
+
+        const double deviation =
+            std::hypot(difference.x(), difference.y());
+
+        QColor color("#66BB6A");
+
+        if (deviation >= errorDistance)
+            color = QColor("#FF1744");
+        else if (deviation >= warningDistance)
+            color = QColor("#FFD600");
+
+        QPen connectionPen(color, 1.5);
+        connectionPen.setCosmetic(true);
+
+        QGraphicsLineItem* connection =
+            matchingScene->addLine(
+                QLineF(firstPoint, secondPoint),
+                connectionPen
+                );
+
+        connection->setZValue(15.0);
+
+        if (deviation >= warningDistance)
+        {
+            QGraphicsEllipseItem* marker =
+                matchingScene->addEllipse(
+                    QRectF(firstPoint.x() - 2.5,
+                           firstPoint.y() - 2.5,
+                           5.0,
+                           5.0),
+                    QPen(Qt::NoPen),
+                    QBrush(color)
+                    );
+
+            marker->setZValue(16.0);
+        }
+    }
+
+    // ------------------------------------------------------------
+    // 7. Beschriftung
+    // ------------------------------------------------------------
+
+    QGraphicsTextItem* firstLabel =
+        matchingScene->addText(tr("Teil %1 – Nase").arg(first.id));
+
     firstLabel->setDefaultTextColor(QColor("#00E5FF"));
     firstLabel->setPos(first.center + firstOffset);
     firstLabel->setZValue(20.0);
 
-    QGraphicsTextItem* secondLabel = matchingScene->addText(tr("Teil %1 – Einbuchtung").arg(second.id));
+    QGraphicsTextItem* secondLabel =
+        matchingScene->addText(tr("Teil %1 – Einbuchtung").arg(second.id));
+
     secondLabel->setDefaultTextColor(QColor("#FF9100"));
     secondLabel->setPos(secondRotation.map(second.center) + secondOffset);
     secondLabel->setZValue(20.0);
 
-    const QRectF bounds = matchingScene->itemsBoundingRect().adjusted(-30.0, -30.0, 30.0, 30.0);
+    // ------------------------------------------------------------
+    // 8. Ansicht anpassen
+    // ------------------------------------------------------------
+
+    const QRectF bounds =
+        matchingScene->itemsBoundingRect().adjusted(-30.0, -30.0, 30.0, 30.0);
+
     matchingScene->setSceneRect(bounds);
     matchingView->fitInView(bounds, Qt::KeepAspectRatio);
 }
