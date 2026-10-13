@@ -4,6 +4,8 @@
 #include <QPointF>
 #include <QHash>
 #include <QMap>
+#include <QPainterPath>
+#include <QPainter>
 
 #include <algorithm>
 #include <cmath>
@@ -122,52 +124,50 @@ EdgeProfile createProfile(const QPolygonF& contour)
     return result;
 }
 
-double compareProfiles(const EdgeProfile& first, const EdgeProfile& second)
+double calculateLengthDifference(const EdgeProfile& first, const EdgeProfile& second, double firstScale, double secondScale)
 {
-    if (!first.valid || !second.valid)
+    if (!first.valid || !second.valid || firstScale <= 0.0 || secondScale <= 0.0)
         return std::numeric_limits<double>::infinity();
 
-    const double averageLength = (first.length + second.length) * 0.5;
-    const double lengthDifference = std::abs(first.length - second.length) / averageLength;
+    const double firstLength = first.length * firstScale;
+    const double secondLength = second.length * secondScale;
+    const double averageLength = (firstLength + secondLength) * 0.5;
 
-    if (lengthDifference > 0.20)
+    if (averageLength <= 0.0)
+        return std::numeric_limits<double>::infinity();
+
+    return std::abs(firstLength - secondLength) / averageLength;
+}
+
+double compareProfiles(const EdgeProfile& first, const EdgeProfile& second, double firstScale, double secondScale)
+{
+    if (!first.valid || !second.valid || first.values.size() != SampleCount || second.values.size() != SampleCount)
+        return std::numeric_limits<double>::infinity();
+
+    const double lengthDifference = calculateLengthDifference(first, second, firstScale, secondScale);
+
+    if (!std::isfinite(lengthDifference) || lengthDifference > 0.20)
         return std::numeric_limits<double>::infinity();
 
     double squaredError = 0.0;
 
     for (int index = 0; index < SampleCount; ++index)
     {
-        const double difference =
-            first.values[index] + second.values[SampleCount - 1 - index];
-
+        const double difference = first.values[index] + second.values[SampleCount - 1 - index];
         squaredError += difference * difference;
     }
 
-    return std::sqrt(squaredError / SampleCount) * 100.0
-           + lengthDifference * 100.0;
+    return std::sqrt(squaredError / SampleCount) * 100.0 + lengthDifference * 100.0;
 }
 
-double compareContours(
-    const EdgeProfile& first,
-    const EdgeProfile& second)
+double compareContours(const EdgeProfile& first, const EdgeProfile& second, double firstScale, double secondScale)
 {
-    if (!first.valid || !second.valid ||
-        first.values.size() != SampleCount ||
-        second.values.size() != SampleCount)
-    {
-        return std::numeric_limits<double>::infinity();
-    }
-
-    const double averageLength =
-        (first.length + second.length) * 0.5;
-
-    if (averageLength <= 0.0)
+    if (!first.valid || !second.valid || first.values.size() != SampleCount || second.values.size() != SampleCount)
         return std::numeric_limits<double>::infinity();
 
-    const double lengthDifference =
-        std::abs(first.length - second.length) / averageLength;
+    const double lengthDifference = calculateLengthDifference(first, second, firstScale, secondScale);
 
-    if (lengthDifference > 0.20)
+    if (!std::isfinite(lengthDifference) || lengthDifference > 0.20)
         return std::numeric_limits<double>::infinity();
 
     QVector<double> errors;
@@ -175,31 +175,94 @@ double compareContours(
 
     for (int index = 0; index < SampleCount; ++index)
     {
-        const double difference =
-            first.values[index] +
-            second.values[SampleCount - 1 - index];
-
+        const double difference = first.values[index] + second.values[SampleCount - 1 - index];
         errors.append(std::abs(difference));
     }
 
     std::sort(errors.begin(), errors.end());
 
-    // Die größten 10 % der Abweichungen ignorieren.
-    // Dadurch beeinflussen einzelne Konturfehler
-    // den neuen Vergleich weniger stark.
-
-    const int retainedCount =
-        SampleCount - SampleCount / 10;
-
+    const int retainedCount = SampleCount - SampleCount / 10;
     double squaredError = 0.0;
 
     for (int index = 0; index < retainedCount; ++index)
         squaredError += errors[index] * errors[index];
 
-    const double contourError =
-        std::sqrt(squaredError / retainedCount) * 100.0;
+    const double contourError = std::sqrt(squaredError / retainedCount) * 100.0;
 
     return contourError + lengthDifference * 100.0;
+}
+
+bool calculateDetailedGeometry(
+    const EdgeProfile& outward,
+    const EdgeProfile& inward,
+    double& maximumScore,
+    double& noseScore)
+{
+    maximumScore = 0.0;
+    noseScore = 0.0;
+
+    if (!outward.valid || !inward.valid ||
+        outward.values.size() != SampleCount ||
+        inward.values.size() != SampleCount)
+        return false;
+
+    QVector<double> errors;
+    errors.reserve(SampleCount);
+
+    // Die Nase wird aus dem Profil der äußeren Kante erkannt.
+    // Wir verwenden dafür die relative Auslenkung zur Grundlinie.
+
+    double maximumNoseDepth = 0.0;
+
+    for (int index = 0; index < SampleCount; ++index)
+        maximumNoseDepth = std::max(maximumNoseDepth, std::abs(outward.values[index]));
+
+    if (maximumNoseDepth <= 1e-9)
+        return false;
+
+    // Punkte mit mindestens 25 % der maximalen Auslenkung
+    // gehören zum relevanten Nasenbereich.
+
+    const double noseThreshold = maximumNoseDepth * 0.25;
+
+    double noseSquaredError = 0.0;
+    int noseCount = 0;
+
+    for (int index = 0; index < SampleCount; ++index)
+    {
+        const double difference =
+            outward.values[index] +
+            inward.values[SampleCount - 1 - index];
+
+        const double error = std::abs(difference) * 100.0;
+
+        errors.append(error);
+
+        if (std::abs(outward.values[index]) >= noseThreshold)
+        {
+            noseSquaredError += error * error;
+            ++noseCount;
+        }
+    }
+
+    if (noseCount < 3)
+        return false;
+
+    // Gmax: 95. Perzentil der lokalen Formabweichungen.
+    // Damit vermeiden wir eine Überbewertung einzelner Ausreißer.
+
+    std::sort(errors.begin(), errors.end());
+
+    const int percentileIndex =
+        static_cast<int>(std::ceil(0.95 * errors.size())) - 1;
+
+    maximumScore = errors[std::clamp(percentileIndex, 0, static_cast<int>(errors.size()) - 1)];
+
+    // Gnase: RMS der lokalen Formabweichungen im Nasenbereich.
+
+    noseScore = std::sqrt(noseSquaredError / noseCount);
+
+    return true;
 }
 
 QPointF pointAtFraction(const QPolygonF& contour, double fraction)
@@ -247,6 +310,115 @@ LabColor toLab(const QColor& color)
     const double fy = labFunction(y);
     const double fz = labFunction(z);
     return {116.0 * fy - 16.0, 500.0 * (fx - fy), 200.0 * (fy - fz)};
+}
+
+double medianValue(QVector<double>& values)
+{
+    if (values.isEmpty())
+        return 0.0;
+
+    std::sort(values.begin(), values.end());
+
+    const int middle = values.size() / 2;
+
+    if (values.size() % 2 == 0)
+        return (values[middle - 1] + values[middle]) * 0.5;
+
+    return values[middle];
+}
+
+bool calculateTableColor(const PuzzleImage& puzzleImage, LabColor& result)
+{
+    if (puzzleImage.image.isNull())
+        return false;
+
+    const QImage& source = puzzleImage.image;
+
+    // Die Maske wird bewusst in voller Bildauflösung aufgebaut.
+    // Wir benötigen sie nur einmal während der Bildanalyse.
+
+    QImage excluded(source.size(), QImage::Format_Grayscale8);
+    excluded.fill(0);
+
+    {
+        QPainter painter(&excluded);
+        painter.setRenderHint(QPainter::Antialiasing, false);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(Qt::white);
+
+        for (const PuzzlePiece& piece : puzzleImage.pieces)
+        {
+            if (piece.contour.size() < 3)
+                continue;
+
+            QPainterPath path;
+            path.addPolygon(piece.contour);
+            path.closeSubpath();
+
+            painter.drawPath(path);
+        }
+    }
+
+    // Abstand zu Puzzleteilen, damit Kanten und Schatten
+    // möglichst nicht als Tischfarbe erfasst werden.
+
+    constexpr int SafetyDistance = 16;
+    constexpr int SampleStep = 8;
+    constexpr int MaximumSamples = 20000;
+
+    QVector<double> lightness;
+    QVector<double> channelA;
+    QVector<double> channelB;
+
+    lightness.reserve(MaximumSamples);
+    channelA.reserve(MaximumSamples);
+    channelB.reserve(MaximumSamples);
+
+    for (int y = SafetyDistance; y < source.height() - SafetyDistance; y += SampleStep)
+    {
+        for (int x = SafetyDistance; x < source.width() - SafetyDistance; x += SampleStep)
+        {
+            bool nearPiece = false;
+
+            for (int dy = -SafetyDistance; dy <= SafetyDistance && !nearPiece; dy += 4)
+            {
+                const uchar* maskLine = excluded.constScanLine(y + dy);
+
+                for (int dx = -SafetyDistance; dx <= SafetyDistance; dx += 4)
+                {
+                    if (maskLine[x + dx] != 0)
+                    {
+                        nearPiece = true;
+                        break;
+                    }
+                }
+            }
+
+            if (nearPiece)
+                continue;
+
+            const LabColor color = toLab(QColor::fromRgb(source.pixel(x, y)));
+
+            lightness.append(color.l);
+            channelA.append(color.a);
+            channelB.append(color.b);
+
+            if (lightness.size() >= MaximumSamples)
+                break;
+        }
+
+        if (lightness.size() >= MaximumSamples)
+            break;
+    }
+
+    if (lightness.size() < 100)
+        return false;
+
+    result.l = medianValue(lightness);
+    result.a = medianValue(channelA);
+    result.b = medianValue(channelB);
+
+    return true;
 }
 
 bool sampleLab(const QImage& image, const QPointF& point, LabColor& color)
@@ -335,7 +507,57 @@ double compareColors(const ColorProfile& outward, const ColorProfile& inward)
     return count >= SampleCount / 2 ? error / count : std::numeric_limits<double>::infinity();
 }
 
+double compareCalibratedColors(
+    const ColorProfile& outward,
+    const ColorProfile& inward,
+    const LabColor& firstTable,
+    const LabColor& secondTable,
+    bool firstValid,
+    bool secondValid)
+{
+    if (!firstValid || !secondValid)
+        return compareColors(outward, inward);
 
+    if (outward.values.size() != SampleCount ||
+        inward.values.size() != SampleCount ||
+        outward.valid.size() != SampleCount ||
+        inward.valid.size() != SampleCount)
+        return std::numeric_limits<double>::infinity();
+
+    // Die Tischfarbe des ersten Fotos ist die Referenz.
+    // Korrektur begrenzen, damit fehlerhafte Hintergrundmessungen
+    // keine beliebig großen Farbänderungen verursachen.
+
+    const double correctionL = std::clamp(firstTable.l - secondTable.l, -12.0, 12.0);
+    const double correctionA = std::clamp(firstTable.a - secondTable.a, -8.0, 8.0);
+    const double correctionB = std::clamp(firstTable.b - secondTable.b, -8.0, 8.0);
+
+    double error = 0.0;
+    int count = 0;
+
+    for (int index = 0; index < SampleCount; ++index)
+    {
+        const int opposite = SampleCount - 1 - index;
+
+        if (!outward.valid[index] || !inward.valid[opposite])
+            continue;
+
+        const LabColor& first = outward.values[index];
+        const LabColor& second = inward.values[opposite];
+
+        const double dl = first.l - (second.l + correctionL);
+        const double da = first.a - (second.a + correctionA);
+        const double db = first.b - (second.b + correctionB);
+
+        error += std::sqrt(dl * dl + da * da + db * db);
+        ++count;
+    }
+
+    if (count < SampleCount / 2)
+        return std::numeric_limits<double>::infinity();
+
+    return error / count;
+}
 }
 
 
@@ -379,19 +601,28 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
             const PuzzleCachedEdge& firstEdge = *first.edge;
             const PuzzleCachedEdge& secondEdge = *second.edge;
 
+            const PuzzleImage& firstImage = images[first.imageIndex];
+            const PuzzleImage& secondImage = images[second.imageIndex];
+
+            const double firstScale = firstImage.scaleFactor;
+            const double secondScale = secondImage.scaleFactor;
+
             if (first.imageIndex == second.imageIndex &&
                 firstEdge.pieceIndex == secondEdge.pieceIndex)
                 continue;
 
-            const double geometry = compareProfiles(
-                firstEdge.geometry,
-                secondEdge.geometry
-                );
+            const double geometry = compareProfiles(firstEdge.geometry, secondEdge.geometry, firstScale, secondScale);
+            const double contour = compareContours(firstEdge.geometry, secondEdge.geometry, firstScale, secondScale);
+            double maximumGeometry = 0.0;
+            double noseGeometry = 0.0;
 
-            const double contour = compareContours(
+            const bool detailedGeometryValid = calculateDetailedGeometry(
                 firstEdge.geometry,
-                secondEdge.geometry
+                secondEdge.geometry,
+                maximumGeometry,
+                noseGeometry
                 );
+            const double lengthDifference = calculateLengthDifference(firstEdge.geometry, secondEdge.geometry, firstScale, secondScale);
 
             if (!std::isfinite(geometry) || geometry > 10.0)
                 continue;
@@ -399,6 +630,15 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
             const double color = compareColors(
                 firstEdge.colors,
                 secondEdge.colors
+                );
+
+            const double calibratedColor = compareCalibratedColors(
+                firstEdge.colors,
+                secondEdge.colors,
+                firstImage.tableColor,
+                secondImage.tableColor,
+                firstImage.tableColorValid,
+                secondImage.tableColorValid
                 );
 
             if (!std::isfinite(color) || color > 25.0)
@@ -422,11 +662,18 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
 
             match.geometryScore = geometry;
             match.contourScore = contour;
+            match.maximumGeometryScore =
+                detailedGeometryValid ? maximumGeometry : std::numeric_limits<double>::quiet_NaN();
+
+            match.noseGeometryScore =
+                detailedGeometryValid ? noseGeometry : std::numeric_limits<double>::quiet_NaN();
+            match.lengthScore = lengthDifference * 100.0;
             match.colorScore = color;
 
             match.previousColorScore =
                 std::numeric_limits<double>::infinity();
 
+            match.calibratedColorScore = calibratedColor;
             match.score = score;
 
             matches.append(match);
@@ -609,5 +856,14 @@ void PuzzleEdgeMatcher::calibrateImages(QVector<PuzzleImage>& images) const
 
         puzzleImage.scaleFactor =
             referenceLength / puzzleImage.typicalEdgeLength;
+    }
+}
+
+void PuzzleEdgeMatcher::calibrateTableColors(QVector<PuzzleImage>& images) const
+{
+    for (PuzzleImage& puzzleImage : images)
+    {
+        puzzleImage.tableColorValid =
+            calculateTableColor(puzzleImage, puzzleImage.tableColor);
     }
 }

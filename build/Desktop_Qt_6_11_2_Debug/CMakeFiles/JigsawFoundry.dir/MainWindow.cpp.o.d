@@ -416,6 +416,10 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qguiapplication_platform.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QTimer \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtimer.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsEllipseItem \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsitem.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpainterpath.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QBrush \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QCloseEvent \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGroupBox \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgroupbox.h \
@@ -485,8 +489,6 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qsettings.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QFileInfo \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsPolygonItem \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsitem.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpainterpath.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QListWidget \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsLineItem \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsPathItem \

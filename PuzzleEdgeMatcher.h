@@ -15,9 +15,13 @@ struct PuzzleEdgeMatch
     int secondEdgeIndex = -1;
 
     double geometryScore = 0.0;
+    double maximumGeometryScore = 0.0;
+    double noseGeometryScore = 0.0;
     double contourScore = 0.0;
+    double lengthScore = 0.0;
     double colorScore = 0.0;
     double previousColorScore = 0.0;
+    double calibratedColorScore = 0.0;
     double score = 0.0;
 
     bool mutualBestMatch = false;
@@ -33,4 +37,5 @@ public:
         ) const;
 
     void calibrateImages(QVector<PuzzleImage>& images) const;
+    void calibrateTableColors(QVector<PuzzleImage>& images) const;
 };

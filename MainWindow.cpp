@@ -5,7 +5,8 @@
 
 #include <QResizeEvent>
 #include <QTimer>
-
+#include <QGraphicsEllipseItem>
+#include <QBrush>
 #include <QCloseEvent>
 #include <QGroupBox>
 #include <QLabel>
@@ -240,6 +241,31 @@ void drawEdgeLabels(
     }
 }
 
+double calculateLocalColorDifference(
+    const PuzzleLabColor& first,
+    const PuzzleLabColor& second,
+    const PuzzleLabColor& firstTable,
+    const PuzzleLabColor& secondTable,
+    bool firstTableValid,
+    bool secondTableValid)
+{
+    double correctionL = 0.0;
+    double correctionA = 0.0;
+    double correctionB = 0.0;
+
+    if (firstTableValid && secondTableValid)
+    {
+        correctionL = std::clamp(firstTable.l - secondTable.l, -12.0, 12.0);
+        correctionA = std::clamp(firstTable.a - secondTable.a, -8.0, 8.0);
+        correctionB = std::clamp(firstTable.b - secondTable.b, -8.0, 8.0);
+    }
+
+    const double dl = first.l - (second.l + correctionL);
+    const double da = first.a - (second.a + correctionA);
+    const double db = first.b - (second.b + correctionB);
+
+    return std::sqrt(dl * dl + da * da + db * db);
+}
 }
 
 MainWindow::MainWindow(QWidget* parent)
@@ -858,6 +884,35 @@ void MainWindow::updateMatching()
 
     PuzzleEdgeMatcher matcher;
     matcher.calibrateImages(images);
+    matcher.calibrateTableColors(images);
+
+    for (int index = 0; index < images.size(); ++index)
+    {
+        const PuzzleImage& puzzleImage = images[index];
+
+        qDebug().noquote()
+            << QStringLiteral("Bild %1: %2 | Teile: %3 | Kantenlänge: %4 px | Skalierung: %5 | Gültig: %6")
+                   .arg(index + 1)
+                   .arg(QFileInfo(puzzleImage.filePath).fileName())
+                   .arg(puzzleImage.usablePieces)
+                   .arg(puzzleImage.typicalEdgeLength, 0, 'f', 2)
+                   .arg(puzzleImage.scaleFactor, 0, 'f', 4)
+                   .arg(puzzleImage.scaleValid);
+    }
+
+    for (int index = 0; index < images.size(); ++index)
+    {
+        const PuzzleImage& puzzleImage = images[index];
+
+        qDebug().noquote()
+            << QStringLiteral("Bild %1 | Tisch Lab: L=%2 a=%3 b=%4 | Gültig: %5")
+                   .arg(index + 1)
+                   .arg(puzzleImage.tableColor.l, 0, 'f', 2)
+                   .arg(puzzleImage.tableColor.a, 0, 'f', 2)
+                   .arg(puzzleImage.tableColor.b, 0, 'f', 2)
+                   .arg(puzzleImage.tableColorValid);
+    }
+
     matches = matcher.findMatches(images);
 
     const int maximumResults =
@@ -879,7 +934,8 @@ void MainWindow::updateMatching()
         const QString description =
             tr("%1: Teil %2 / Kante %3\n"
                "%4: Teil %5 / Kante %6\n"
-               "G: %7  K: %8  F: %9  Gesamt: %10")
+               "G: %7  K: %8  Gmax: %9  Gnase: %10\n"
+               "L: %11%  F: %12  FK: %13  Gesamt: %14")
                 .arg(firstName)
                 .arg(first.id)
                 .arg(match.firstEdgeIndex + 1)
@@ -888,7 +944,11 @@ void MainWindow::updateMatching()
                 .arg(match.secondEdgeIndex + 1)
                 .arg(match.geometryScore, 0, 'f', 2)
                 .arg(match.contourScore, 0, 'f', 2)
+                .arg(match.maximumGeometryScore, 0, 'f', 2)
+                .arg(match.noseGeometryScore, 0, 'f', 2)
+                .arg(match.lengthScore, 0, 'f', 2)
                 .arg(match.colorScore, 0, 'f', 2)
+                .arg(match.calibratedColorScore, 0, 'f', 2)
                 .arg(match.score, 0, 'f', 2);
 
         QPixmap preview(152, 80);
@@ -1019,22 +1079,29 @@ void MainWindow::showMatchingPreview(int matchIndex)
     const QPointF secondStart = secondEdge.first();
     const QPointF secondEnd = secondEdge.last();
 
-    const double firstAngle = std::atan2(
-        firstStart.y() - firstEnd.y(),
-        firstStart.x() - firstEnd.x()
-        );
+    const double firstAngle = std::atan2(firstStart.y() - firstEnd.y(), firstStart.x() - firstEnd.x());
+    const double secondAngle = std::atan2(secondEnd.y() - secondStart.y(), secondEnd.x() - secondStart.x());
 
-    const double secondAngle = std::atan2(
-        secondEnd.y() - secondStart.y(),
-        secondEnd.x() - secondStart.x()
-        );
+    const double firstScale = firstSource.scaleFactor;
+    const double secondScale = secondSource.scaleFactor;
+    const double relativeScale = firstScale > 0.0 ? secondScale / firstScale : 1.0;
 
     QTransform secondRotation;
     secondRotation.rotateRadians(firstAngle - secondAngle);
 
+    QTransform secondTransform;
+    secondTransform.rotateRadians(firstAngle - secondAngle);
+    secondTransform.scale(relativeScale, relativeScale);
+
     const QPointF firstOffset = -first.center;
+
+    const QPointF firstMidpoint = (firstStart + firstEnd) * 0.5;
+    const QPointF secondMidpoint = (secondStart + secondEnd) * 0.5;
+
+    // Beide Sehnenmittelpunkte zur Deckung bringen.
+    // Unterschiede der Sehnenlängen bleiben sichtbar.
     const QPointF secondOffset =
-        firstEnd + firstOffset - secondRotation.map(secondStart);
+        firstMidpoint + firstOffset - secondTransform.map(secondMidpoint);
 
     const QRect firstBounds = first.contour.boundingRect()
                                   .adjusted(-2, -2, 2, 2)
@@ -1060,10 +1127,8 @@ void MainWindow::showMatchingPreview(int matchIndex)
     QGraphicsPixmapItem* secondItem =
         matchingScene->addPixmap(QPixmap::fromImage(secondImage));
 
-    secondItem->setTransform(secondRotation);
-    secondItem->setPos(
-        secondRotation.map(QPointF(secondBounds.topLeft())) + secondOffset
-        );
+    secondItem->setTransform(secondTransform);
+    secondItem->setPos(secondTransform.map(QPointF(secondBounds.topLeft())) + secondOffset);
 
     secondItem->setOpacity(0.65);
     secondItem->setZValue(2.0);
@@ -1079,7 +1144,7 @@ void MainWindow::showMatchingPreview(int matchIndex)
         firstPreviewEdge.append(point + firstOffset);
 
     for (const QPointF& point : secondEdge)
-        secondPreviewEdge.append(secondRotation.map(point) + secondOffset);
+        secondPreviewEdge.append(secondTransform.map(point) + secondOffset);
 
     // ------------------------------------------------------------
     // 4. Kanten zeichnen
@@ -1267,6 +1332,94 @@ void MainWindow::showMatchingPreview(int matchIndex)
     }
 
     // ------------------------------------------------------------
+    // Lokale Farbabweichungen entlang der Verbindung anzeigen
+    // ------------------------------------------------------------
+
+    const PuzzleCachedEdge* firstCachedEdge = nullptr;
+    const PuzzleCachedEdge* secondCachedEdge = nullptr;
+
+    for (const PuzzleCachedEdge& edge : firstSource.cachedEdges)
+    {
+        if (edge.pieceIndex == match.firstPieceIndex &&
+            edge.edgeIndex == match.firstEdgeIndex)
+        {
+            firstCachedEdge = &edge;
+            break;
+        }
+    }
+
+    for (const PuzzleCachedEdge& edge : secondSource.cachedEdges)
+    {
+        if (edge.pieceIndex == match.secondPieceIndex &&
+            edge.edgeIndex == match.secondEdgeIndex)
+        {
+            secondCachedEdge = &edge;
+            break;
+        }
+    }
+
+    if (firstCachedEdge != nullptr && secondCachedEdge != nullptr)
+    {
+        const PuzzleEdgeColorProfile& firstColors = firstCachedEdge->colors;
+        const PuzzleEdgeColorProfile& secondColors = secondCachedEdge->colors;
+
+        const int colorSampleCount = 64;
+
+        if (firstColors.values.size() == colorSampleCount &&
+            secondColors.values.size() == colorSampleCount &&
+            firstColors.valid.size() == colorSampleCount &&
+            secondColors.valid.size() == colorSampleCount)
+        {
+            for (int index = 0; index < colorSampleCount; ++index)
+            {
+                const int opposite = colorSampleCount - 1 - index;
+
+                if (!firstColors.valid[index] || !secondColors.valid[opposite])
+                    continue;
+
+                const double difference = calculateLocalColorDifference(
+                    firstColors.values[index],
+                    secondColors.values[opposite],
+                    firstSource.tableColor,
+                    secondSource.tableColor,
+                    firstSource.tableColorValid,
+                    secondSource.tableColorValid
+                    );
+
+                QColor color("#66BB6A");
+
+                if (difference >= 20.0)
+                    color = QColor("#FF1744");
+                else if (difference >= 10.0)
+                    color = QColor("#FFD600");
+
+                const double fraction =
+                    static_cast<double>(index) / (colorSampleCount - 1);
+
+                const QPointF firstPoint =
+                    pointAtFraction(firstPoints, fraction, firstTotal);
+
+                const QPointF secondPoint =
+                    pointAtFraction(secondPoints, 1.0 - fraction, secondTotal);
+
+                const QPointF middle = (firstPoint + secondPoint) * 0.5;
+
+                QGraphicsEllipseItem* marker =
+                    matchingScene->addEllipse(
+                        QRectF(middle.x() - 2.0,
+                               middle.y() - 2.0,
+                               4.0,
+                               4.0),
+                        QPen(Qt::NoPen),
+                        QBrush(color)
+                        );
+
+                marker->setZValue(25.0);
+            }
+        }
+    }
+
+    // ------------------------------------------------------------
     // 7. Beschriftung
     // ------------------------------------------------------------
 
@@ -1281,7 +1434,7 @@ void MainWindow::showMatchingPreview(int matchIndex)
         matchingScene->addText(tr("Teil %1 – Einbuchtung").arg(second.id));
 
     secondLabel->setDefaultTextColor(QColor("#FF9100"));
-    secondLabel->setPos(secondRotation.map(second.center) + secondOffset);
+    secondLabel->setPos(secondTransform.map(second.center) + secondOffset);
     secondLabel->setZValue(20.0);
 
     // ------------------------------------------------------------

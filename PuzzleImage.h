@@ -52,6 +52,9 @@ struct PuzzleImage
     double scaleFactor = 1.0;
     bool scaleValid = false;
 
+    PuzzleLabColor tableColor;
+    bool tableColorValid = false;
+
     QVector<PuzzlePiece> pieces;
     QVector<PuzzleContourEdges> analyses;
     QVector<double> rotations;

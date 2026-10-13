@@ -659,6 +659,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qxptype_traits.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qyieldcpu.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QAction \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QBrush \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QCloseEvent \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QFont \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage \
@@ -714,6 +715,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qvectornd.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qwindowdefs.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QFileDialog \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsEllipseItem \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsLineItem \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsPathItem \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsPixmapItem \
@@ -2036,11 +2038,14 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qconfig.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qconstructormacros.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcontainerfwd.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcontainerinfo.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcontainertools_impl.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdarwinhelpers.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdatastream.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qendian.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qexceptionhandling.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qflags.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qfloat16.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qforeach.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qfunctionaltools_impl.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qfunctionpointer.h \
@@ -2050,6 +2055,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qhash.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qhashfunctions.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiodevicebase.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiterable.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiterator.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qlatin1stringview.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qline.h \
@@ -2058,6 +2064,9 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmalloc.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmap.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmargins.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmath.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmetacontainer.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmetatype.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qminmax.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qnamespace.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qnumeric.h \
@@ -2089,6 +2098,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qswap.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qsysinfo.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qsystemdetection.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtaggedpointer.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtclasshelpermacros.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtconfiginclude.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtconfigmacros.h \
@@ -2098,6 +2108,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtdeprecationdefinitions.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtdeprecationmarkers.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtenvironmentvariables.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtformat_impl.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtmetamacros.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtnoop.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtpreprocessorsupport.h \
@@ -2115,17 +2126,28 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qyieldcpu.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QColor \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPainter \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPainterPath \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPixmap \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPolygonF \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qbrush.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qcolor.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qfont.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qfontinfo.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qfontmetrics.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qfontvariableaxis.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qimage.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpaintdevice.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpainter.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpainterpath.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpen.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixelformat.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixmap.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpolygon.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qregion.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qrgb.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qrgba64.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtextoption.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtgui-config.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtguiexports.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtguiglobal.h \
@@ -2252,6 +2274,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /usr/include/c++/16/bits/hashtable_policy.h \
   /usr/include/c++/16/bits/invoke.h \
   /usr/include/c++/16/bits/ios_base.h \
+  /usr/include/c++/16/bits/list.tcc \
   /usr/include/c++/16/bits/locale_classes.h \
   /usr/include/c++/16/bits/locale_classes.tcc \
   /usr/include/c++/16/bits/localefwd.h \
@@ -2290,6 +2313,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /usr/include/c++/16/bits/stl_iterator.h \
   /usr/include/c++/16/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/16/bits/stl_iterator_base_types.h \
+  /usr/include/c++/16/bits/stl_list.h \
   /usr/include/c++/16/bits/stl_map.h \
   /usr/include/c++/16/bits/stl_multimap.h \
   /usr/include/c++/16/bits/stl_numeric.h \
@@ -2341,6 +2365,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /usr/include/c++/16/iosfwd \
   /usr/include/c++/16/iterator \
   /usr/include/c++/16/limits \
+  /usr/include/c++/16/list \
   /usr/include/c++/16/map \
   /usr/include/c++/16/memory \
   /usr/include/c++/16/new \
@@ -3027,6 +3052,8 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsLineItem:
 
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsEllipseItem:
+
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QFileDialog:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemdelegate.h:
@@ -3172,6 +3199,8 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qregularexpression.h:
 
 /usr/include/ctype.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QBrush:
 
 /usr/include/c++/16/x86_64-pc-linux-gnu/bits/os_defines.h:
 

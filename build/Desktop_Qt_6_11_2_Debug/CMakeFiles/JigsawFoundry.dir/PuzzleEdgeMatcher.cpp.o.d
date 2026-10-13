@@ -338,4 +338,26 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qshareddata_impl.h \
  /usr/include/c++/16/map /usr/include/c++/16/bits/stl_tree.h \
  /usr/include/c++/16/bits/stl_map.h \
- /usr/include/c++/16/bits/stl_multimap.h
+ /usr/include/c++/16/bits/stl_multimap.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPainterPath \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpainterpath.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPainter \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpainter.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtextoption.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmetatype.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qfloat16.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmath.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtformat_impl.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiterable.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtaggedpointer.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmetacontainer.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcontainerinfo.h \
+ /usr/include/c++/16/list /usr/include/c++/16/bits/stl_list.h \
+ /usr/include/c++/16/bits/list.tcc \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpen.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qbrush.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qfontinfo.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qfont.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qendian.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qfontvariableaxis.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qfontmetrics.h
