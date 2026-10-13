@@ -399,13 +399,7 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiec
 
             const double previousColor = compareColors(first.colors, second.colors);
 
-            const double color = compareAlignedColors(
-                image,
-                analyses[first.pieceIndex].edges[first.edgeIndex],
-                pieces[first.pieceIndex].center,
-                analyses[second.pieceIndex].edges[second.edgeIndex],
-                pieces[second.pieceIndex].center
-                );
+            const double color = std::numeric_limits<double>::infinity();
 
             if (!std::isfinite(previousColor))
                 continue;
