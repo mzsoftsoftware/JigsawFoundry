@@ -654,6 +654,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qxptype_traits.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qyieldcpu.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QAction
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QCloseEvent
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QFont
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPainter
@@ -686,6 +687,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpainterpath.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpalette.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpen.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpicture.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixelformat.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixmap.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpointingdevice.h
@@ -695,6 +697,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qrgba64.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qscreen.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qscreen_platform.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtextdocument.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtextoption.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtgui-config.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtguiexports.h
@@ -712,23 +715,33 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsScene
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsTextItem
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsView
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGroupBox
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QLabel
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QListWidget
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QListWidgetItem
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QMainWindow
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QMenuBar
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QSplitter
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QStatusBar
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QToolBar
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QVBoxLayout
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemdelegate.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemview.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractscrollarea.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractslider.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractspinbox.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qboxlayout.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qdialog.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qfiledialog.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qframe.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsitem.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsscene.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsview.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgridlayout.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgroupbox.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlabel.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlayout.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlayoutitem.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistview.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistwidget.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qmainwindow.h

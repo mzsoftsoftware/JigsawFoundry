@@ -652,6 +652,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qxptype_traits.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qyieldcpu.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QAction \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QCloseEvent \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QFont \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPainter \
@@ -684,6 +685,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpainterpath.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpalette.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpen.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpicture.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixelformat.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixmap.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpointingdevice.h \
@@ -693,6 +695,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qrgba64.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qscreen.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qscreen_platform.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtextdocument.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtextoption.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtgui-config.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtguiexports.h \
@@ -710,23 +713,33 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsScene \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsTextItem \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsView \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGroupBox \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QLabel \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QListWidget \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QListWidgetItem \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QMainWindow \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QMenuBar \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QSplitter \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QStatusBar \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QToolBar \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QVBoxLayout \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemview.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractscrollarea.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractslider.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractspinbox.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qboxlayout.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qdialog.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qfiledialog.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qframe.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsitem.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsscene.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsview.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgridlayout.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgroupbox.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlabel.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlayout.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlayoutitem.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistview.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistwidget.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qmainwindow.h \
@@ -2926,8 +2939,6 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 
 /usr/include/wctype.h:
 
-/usr/include/libintl.h:
-
 /usr/include/c++/16/x86_64-pc-linux-gnu/bits/ctype_inline.h:
 
 /usr/include/c++/16/sstream:
@@ -2942,10 +2953,6 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 
 /usr/include/c++/16/bits/ostream_print.h:
 
-/usr/include/opencv5/opencv2/core/optim.hpp:
-
-/usr/include/c++/16/bits/locale_facets_nonio.h:
-
 /usr/include/c++/16/bits/istream.tcc:
 
 /usr/include/c++/16/bits/basic_ios.h:
@@ -2955,6 +2962,22 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistwidget.h:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistview.h:
+
+/usr/include/libintl.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlayoutitem.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlayout.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlabel.h:
+
+/usr/include/opencv5/opencv2/core/optim.hpp:
+
+/usr/include/c++/16/bits/locale_facets_nonio.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgroupbox.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgridlayout.h:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsview.h:
 
@@ -2969,6 +2992,8 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemview.h:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QStatusBar:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QListWidgetItem:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsPixmapItem:
 
@@ -3420,6 +3445,8 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qsharedpointer_impl.h:
 
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QCloseEvent:
+
 /usr/include/linux/stddef.h:
 
 /usr/include/c++/16/pstl/glue_algorithm_defs.h:
@@ -3604,6 +3631,8 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q20functional.h:
 
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qboxlayout.h:
+
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qregion.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/16/include/emmintrin.h:
@@ -3678,6 +3707,8 @@ JigsawFoundry_autogen/mocs_compilation.cpp:
 
 /usr/include/c++/16/bits/shared_ptr.h:
 
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QLabel:
+
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qobject.h:
 
 /usr/include/c++/16/cwctype:
@@ -3719,6 +3750,8 @@ JigsawFoundry_autogen/mocs_compilation.cpp:
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QSplitter:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qbytearrayalgorithms.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtextdocument.h:
 
 /usr/include/bits/mathcalls-macros.h:
 
@@ -3918,6 +3951,8 @@ JigsawFoundry_autogen/mocs_compilation.cpp:
 
 /usr/include/c++/16/bits/stl_heap.h:
 
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpicture.h:
+
 /usr/include/asm-generic/types.h:
 
 /usr/include/bits/endianness.h:
@@ -4001,6 +4036,8 @@ JigsawFoundry_autogen/EWIEGA46WW/moc_MainWindow.cpp:
 /usr/include/bits/byteswap.h:
 
 /usr/include/bits/select.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QVBoxLayout:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtversion.h:
 
@@ -4101,6 +4138,8 @@ JigsawFoundry_autogen/EWIEGA46WW/moc_MainWindow.cpp:
 /usr/include/bits/wchar.h:
 
 /usr/include/c++/16/bits/ios_base.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGroupBox:
 
 /usr/include/c++/16/bits/stl_relops.h:
 

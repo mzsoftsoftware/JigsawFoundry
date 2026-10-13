@@ -3,6 +3,11 @@
 #include "PuzzleEdgeDetector.h"
 #include "PuzzleEdgeMatcher.h"
 
+#include <QCloseEvent>
+#include <QGroupBox>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QListWidgetItem>
 #include <QElapsedTimer>
 #include <QDebug>
 #include <QDir>
@@ -238,46 +243,119 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
 {
     scene = new QGraphicsScene(this);
+    secondScene = new QGraphicsScene(this);
+    matchingScene = new QGraphicsScene(this);
     alignedScene = new QGraphicsScene(this);
 
     view = new ImageView(scene, this);
+    secondView = new ImageView(secondScene, this);
+    matchingView = new ImageView(matchingScene, this);
     alignedView = new ImageView(alignedScene, this);
 
-    view->setRenderHint(QPainter::Antialiasing);
-    alignedView->setRenderHint(QPainter::Antialiasing);
+    for (QGraphicsView* graphicsView :
+         {view, secondView, matchingView, alignedView})
+    {
+        graphicsView->setRenderHint(QPainter::Antialiasing);
+        graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+        graphicsView->setTransformationAnchor(
+            QGraphicsView::AnchorUnderMouse
+            );
+        graphicsView->setBackgroundBrush(QColor(45, 48, 54));
+    }
 
-    view->setDragMode(QGraphicsView::ScrollHandDrag);
-    alignedView->setDragMode(QGraphicsView::ScrollHandDrag);
+    mainSplitter = new QSplitter(Qt::Horizontal, this);
+    leftSplitter = new QSplitter(Qt::Vertical, mainSplitter);
+    rightSplitter = new QSplitter(Qt::Vertical, mainSplitter);
 
-    view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-    alignedView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    // Linke Seite: Bilderliste
 
-    alignedView->setBackgroundBrush(QColor(45, 48, 54));
+    QGroupBox* imagesGroup = new QGroupBox(tr("Bilder"), leftSplitter);
+    QVBoxLayout* imagesLayout = new QVBoxLayout(imagesGroup);
 
-    QSplitter* upperSplitter = new QSplitter(Qt::Horizontal, this);
+    imageList = new QListWidget(imagesGroup);
+    imageList->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    upperSplitter->addWidget(view);
-    upperSplitter->addWidget(alignedView);
+    imagesLayout->addWidget(imageList);
+    leftSplitter->addWidget(imagesGroup);
 
-    upperSplitter->setStretchFactor(0, 1);
-    upperSplitter->setStretchFactor(1, 1);
+    // Linke Seite: Match-Liste
 
-    QSplitter* matchingSplitter = new QSplitter(Qt::Horizontal, this);
+    QGroupBox* matchesGroup = new QGroupBox(tr("Matches"), leftSplitter);
+    QVBoxLayout* matchesLayout = new QVBoxLayout(matchesGroup);
 
-    matchingList = new QListWidget(matchingSplitter);
-    matchingList->setMinimumWidth(250);
-    matchingScene = new QGraphicsScene(this);
-    matchingView = new ImageView(matchingScene, matchingSplitter);
-    matchingView->setBackgroundBrush(QColor(45, 48, 54));
-    matchingView->setRenderHint(QPainter::Antialiasing);
-    matchingView->setDragMode(QGraphicsView::ScrollHandDrag);
-    matchingView->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    matchingList = new QListWidget(matchesGroup);
+    matchingList->setSelectionMode(QAbstractItemView::SingleSelection);
+    matchingList->setIconSize(QSize(64, 64));
+    matchingList->setSpacing(3);
 
-    matchingSplitter->addWidget(matchingList);
-    matchingSplitter->addWidget(matchingView);
-    matchingSplitter->setStretchFactor(0, 3);
-    matchingSplitter->setStretchFactor(1, 7);
-    matchingSplitter->setSizes({300, 700});
+    matchesLayout->addWidget(matchingList);
+    leftSplitter->addWidget(matchesGroup);
+
+    // Rechte Seite: Originalbild A
+
+    QGroupBox* firstImageGroup =
+        new QGroupBox(tr("Originalbild A"), rightSplitter);
+
+    QVBoxLayout* firstImageLayout =
+        new QVBoxLayout(firstImageGroup);
+
+    firstImageLayout->setContentsMargins(4, 4, 4, 4);
+    firstImageLayout->addWidget(view);
+
+    rightSplitter->addWidget(firstImageGroup);
+
+    // Rechte Seite: Originalbild B
+
+    QGroupBox* secondImageGroup =
+        new QGroupBox(tr("Originalbild B"), rightSplitter);
+
+    QVBoxLayout* secondImageLayout =
+        new QVBoxLayout(secondImageGroup);
+
+    secondImageLayout->setContentsMargins(4, 4, 4, 4);
+    secondImageLayout->addWidget(secondView);
+
+    rightSplitter->addWidget(secondImageGroup);
+
+    // Rechte Seite: zusammengesetzte Match-Vorschau
+
+    QGroupBox* previewGroup =
+        new QGroupBox(tr("Match-Vorschau"), rightSplitter);
+
+    QVBoxLayout* previewLayout =
+        new QVBoxLayout(previewGroup);
+
+    previewLayout->setContentsMargins(4, 4, 4, 4);
+    previewLayout->addWidget(matchingView);
+
+    rightSplitter->addWidget(previewGroup);
+
+    // Splitter konfigurieren
+
+    mainSplitter->addWidget(leftSplitter);
+    mainSplitter->addWidget(rightSplitter);
+
+    mainSplitter->setChildrenCollapsible(false);
+    leftSplitter->setChildrenCollapsible(false);
+    rightSplitter->setChildrenCollapsible(false);
+
+    mainSplitter->setStretchFactor(0, 4);
+    mainSplitter->setStretchFactor(1, 6);
+
+    leftSplitter->setStretchFactor(0, 2);
+    leftSplitter->setStretchFactor(1, 8);
+
+    rightSplitter->setStretchFactor(0, 1);
+    rightSplitter->setStretchFactor(1, 1);
+    rightSplitter->setStretchFactor(2, 1);
+
+    mainSplitter->setSizes({450, 750});
+    leftSplitter->setSizes({200, 700});
+    rightSplitter->setSizes({300, 300, 300});
+
+    setCentralWidget(mainSplitter);
+
+    // Match-Auswahl
 
     connect(
         matchingList,
@@ -290,27 +368,53 @@ MainWindow::MainWindow(QWidget* parent)
         }
         );
 
-    QSplitter* mainSplitter = new QSplitter(Qt::Vertical, this);
+    connect(
+        rightSplitter,
+        &QSplitter::splitterMoved,
+        this,
+        [this](int, int)
+        {
+            fitOriginalImages();
+        }
+        );
 
-    mainSplitter->addWidget(upperSplitter);
-    mainSplitter->addWidget(matchingSplitter);
+    connect(
+        mainSplitter,
+        &QSplitter::splitterMoved,
+        this,
+        [this](int, int)
+        {
+            fitOriginalImages();
+        }
+        );
 
-    mainSplitter->setStretchFactor(0, 6);
-    mainSplitter->setStretchFactor(1, 4);
-    mainSplitter->setSizes({600, 400});
+    // Aktionen
 
-    setCentralWidget(mainSplitter);
+    QAction* openAction =
+        new QAction(tr("Bild öffnen"), this);
 
-    QAction* openAction = new QAction(tr("Bild öffnen"), this);
-    QAction* detectAction = new QAction(tr("Teile erkennen"), this);
+    QAction* detectAction =
+        new QAction(tr("Teile erkennen"), this);
 
-    connect(openAction, &QAction::triggered, this, [this]() {
-        openImage();
-    });
+    connect(
+        openAction,
+        &QAction::triggered,
+        this,
+        [this]()
+        {
+            openImage();
+        }
+        );
 
-    connect(detectAction, &QAction::triggered, this, [this]() {
-        detectPieces();
-    });
+    connect(
+        detectAction,
+        &QAction::triggered,
+        this,
+        [this]()
+        {
+            detectPieces();
+        }
+        );
 
     QMenu* fileMenu = menuBar()->addMenu(tr("Datei"));
     fileMenu->addAction(openAction);
@@ -319,20 +423,83 @@ MainWindow::MainWindow(QWidget* parent)
     toolBar->addAction(openAction);
     toolBar->addAction(detectAction);
 
-    statusBar()->showMessage(tr("Bitte ein Puzzlefoto öffnen."));
-
     resize(1500, 900);
-    setWindowTitle(tr("PuzzleSolver 0.2 – Ausrichtung"));
+    setWindowTitle(tr("JigsawFoundry"));
+
+    restoreLayout();
+
+    statusBar()->showMessage(tr("Bitte ein Puzzlefoto öffnen."));
+}
+
+void MainWindow::restoreLayout()
+{
+    QSettings settings("MZ Software GmbH", "JigsawFoundry");
+
+    const QByteArray mainState =
+        settings.value("MainWindow/MainSplitter").toByteArray();
+
+    const QByteArray leftState =
+        settings.value("MainWindow/LeftSplitter").toByteArray();
+
+    const QByteArray rightState =
+        settings.value("MainWindow/RightSplitter").toByteArray();
+
+    if (!mainState.isEmpty())
+        mainSplitter->restoreState(mainState);
+
+    if (!leftState.isEmpty())
+        leftSplitter->restoreState(leftState);
+
+    if (!rightState.isEmpty())
+        rightSplitter->restoreState(rightState);
+
+    const QByteArray geometry =
+        settings.value("MainWindow/Geometry").toByteArray();
+
+    if (!geometry.isEmpty())
+        restoreGeometry(geometry);
+}
+
+void MainWindow::saveLayout()
+{
+    QSettings settings("MZ Software GmbH", "JigsawFoundry");
+
+    settings.setValue(
+        "MainWindow/MainSplitter",
+        mainSplitter->saveState()
+        );
+
+    settings.setValue(
+        "MainWindow/LeftSplitter",
+        leftSplitter->saveState()
+        );
+
+    settings.setValue(
+        "MainWindow/RightSplitter",
+        rightSplitter->saveState()
+        );
+
+    settings.setValue(
+        "MainWindow/Geometry",
+        saveGeometry()
+        );
+}
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    saveLayout();
+    QMainWindow::closeEvent(event);
 }
 
 void MainWindow::openImage()
 {
     QSettings settings("MZ Software GmbH", "JigsawFoundry");
 
-    const QString lastDirectory = settings.value(
-                                              "Image/LastDirectory",
-                                              QDir::homePath()
-                                              ).toString();
+    const QString lastDirectory =
+        settings.value(
+                    "Image/LastDirectory",
+                    QDir::homePath()
+                    ).toString();
 
     const QString path = QFileDialog::getOpenFileName(
         this,
@@ -348,7 +515,9 @@ void MainWindow::openImage()
 
     if (loaded.isNull())
     {
-        statusBar()->showMessage(tr("Das Bild konnte nicht geladen werden."));
+        statusBar()->showMessage(
+            tr("Das Bild konnte nicht geladen werden.")
+            );
         return;
     }
 
@@ -357,23 +526,62 @@ void MainWindow::openImage()
         QFileInfo(path).absolutePath()
         );
 
+    imagePath = path;
     image = loaded;
+
     pieces.clear();
     pieceAnalyses.clear();
+    pieceRotations.clear();
+    pieceBaseLines.clear();
     matches.clear();
+
     matchingList->clear();
     matchingScene->clear();
+    imageList->clear();
 
-    showImage();
-    showAlignedPieces();
+    firstMatchingHighlight = nullptr;
+    secondMatchingHighlight = nullptr;
 
-    view->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+    detectPieces();
+}
 
-    statusBar()->showMessage(
-        tr("Bild geladen: %1 × %2 Pixel")
-            .arg(image.width())
-            .arg(image.height())
+void MainWindow::updateImageList()
+{
+    imageList->clear();
+
+    if (image.isNull())
+        return;
+
+    int validPieces = 0;
+
+    for (const PuzzleContourEdges& analysis : pieceAnalyses)
+    {
+        if (analysis.usableForMatching)
+            ++validPieces;
+    }
+
+    const QString fileName =
+        QFileInfo(imagePath).fileName();
+
+    QListWidgetItem* item = new QListWidgetItem(
+        tr("%1  –  %2 gültige Teile")
+            .arg(fileName)
+            .arg(validPieces)
         );
+
+    item->setIcon(
+        QIcon(QPixmap::fromImage(
+            image.scaled(
+                64,
+                64,
+                Qt::KeepAspectRatio,
+                Qt::SmoothTransformation
+                )
+            ))
+        );
+
+    imageList->addItem(item);
+    imageList->setCurrentRow(0);
 }
 
 void MainWindow::detectPieces()
@@ -399,13 +607,12 @@ void MainWindow::detectPieces()
     updatePieceAnalyses();
     const qint64 analysisTime = stepTimer.elapsed();
 
-    stepTimer.restart();
-    showImage();
-    const qint64 imageTime = stepTimer.elapsed();
+    updateImageList();
 
     stepTimer.restart();
-    showAlignedPieces();
-    const qint64 alignmentTime = stepTimer.elapsed();
+    showImage();
+    showSecondImage();
+    const qint64 imageTime = stepTimer.elapsed();
 
     stepTimer.restart();
     updateMatching();
@@ -418,13 +625,11 @@ void MainWindow::detectPieces()
                "JigsawFoundry: Erkennung=%1 ms, "
                "Kantenanalyse=%2 ms, "
                "Bild=%3 ms, "
-               "Ausrichtung/Darstellung=%4 ms, "
                "Matching=%5 ms, "
                "Gesamt=%6 ms")
                .arg(detectionTime)
                .arg(analysisTime)
                .arg(imageTime)
-               .arg(alignmentTime)
                .arg(matchingTime)
                .arg(totalTime);
 
@@ -436,7 +641,7 @@ void MainWindow::detectPieces()
             .arg(pieces.size())
             .arg(detectionTime)
             .arg(analysisTime)
-            .arg(imageTime + alignmentTime)
+            .arg(imageTime)
             .arg(matchingTime)
             .arg(totalTime)
         );
@@ -521,6 +726,23 @@ void MainWindow::showImage()
 
     if (matchingList != nullptr)
         highlightMatchingPieces(matchingList->currentRow());
+}
+
+void MainWindow::showSecondImage()
+{
+    secondScene->clear();
+    secondMatchingHighlight = nullptr;
+
+    if (image.isNull())
+        return;
+
+    secondScene->addPixmap(QPixmap::fromImage(image));
+    secondScene->setSceneRect(image.rect());
+
+    secondView->fitInView(
+        secondScene->sceneRect(),
+        Qt::KeepAspectRatio
+        );
 }
 
 void MainWindow::showAlignedPieces()
@@ -771,8 +993,6 @@ void MainWindow::updateMatching()
 {
     matchingList->clear();
     matchingScene->clear();
-    pieceRotations.clear();
-    pieceBaseLines.clear();
     matches.clear();
 
     if (pieces.isEmpty())
@@ -795,13 +1015,12 @@ void MainWindow::updateMatching()
 
         const QString text =
             prefix +
-            tr("Teil %1 / Kante %2  ↔  Teil %3 / Kante %4  |  G: %5  F alt: %6  F neu: %7  Gesamt: %8")
+            tr("Teil %1 / Kante %2  ↔  Teil %3 / Kante %4  |  G: %5  F: %6  Gesamt: %7")
                 .arg(first.id)
                 .arg(match.firstEdgeIndex + 1)
                 .arg(second.id)
                 .arg(match.secondEdgeIndex + 1)
                 .arg(match.geometryScore, 0, 'f', 2)
-                .arg(match.previousColorScore, 0, 'f', 2)
                 .arg(match.colorScore, 0, 'f', 2)
                 .arg(match.score, 0, 'f', 2);
 
@@ -916,47 +1135,115 @@ void MainWindow::showMatchingPreview(int matchIndex)
 
 void MainWindow::highlightMatchingPieces(int matchIndex)
 {
-    if (firstMatchingHighlight != nullptr)
+    const PuzzlePiece* first = nullptr;
+    const PuzzlePiece* second = nullptr;
+
+    if (matchIndex >= 0 && matchIndex < matches.size())
     {
-        scene->removeItem(firstMatchingHighlight);
-        delete firstMatchingHighlight;
-        firstMatchingHighlight = nullptr;
+        const PuzzleEdgeMatch& match = matches[matchIndex];
+
+        if (match.firstPieceIndex >= 0 &&
+            match.firstPieceIndex < pieces.size() &&
+            match.secondPieceIndex >= 0 &&
+            match.secondPieceIndex < pieces.size())
+        {
+            first = &pieces[match.firstPieceIndex];
+            second = &pieces[match.secondPieceIndex];
+        }
     }
 
-    if (secondMatchingHighlight != nullptr)
+    showOriginalImage(
+        scene,
+        view,
+        firstMatchingHighlight,
+        first,
+        QColor("#00FFFF")
+        );
+
+    showOriginalImage(
+        secondScene,
+        secondView,
+        secondMatchingHighlight,
+        second,
+        QColor("#FF9800")
+        );
+}
+
+void MainWindow::showOriginalImage(
+    QGraphicsScene* targetScene,
+    QGraphicsView* targetView,
+    QGraphicsPolygonItem*& highlight,
+    const PuzzlePiece* selectedPiece,
+    const QColor& highlightColor)
+{
+    targetScene->clear();
+    highlight = nullptr;
+
+    if (image.isNull())
+        return;
+
+    QTransform transform;
+
+    if (image.height() > image.width())
     {
-        scene->removeItem(secondMatchingHighlight);
-        delete secondMatchingHighlight;
-        secondMatchingHighlight = nullptr;
+        transform.translate(image.height(), 0.0);
+        transform.rotate(90.0);
     }
 
-    if (matchIndex < 0 || matchIndex >= matches.size())
-        return;
+    QGraphicsPixmapItem* pixmapItem =
+        targetScene->addPixmap(QPixmap::fromImage(image));
 
-    const PuzzleEdgeMatch& match = matches[matchIndex];
+    pixmapItem->setTransform(transform);
 
-    if (match.firstPieceIndex < 0 || match.firstPieceIndex >= pieces.size() ||
-        match.secondPieceIndex < 0 || match.secondPieceIndex >= pieces.size())
-        return;
+    if (selectedPiece != nullptr)
+    {
+        QPolygonF contour =
+            transform.map(selectedPiece->contour);
 
-    const PuzzlePiece& first = pieces[match.firstPieceIndex];
-    const PuzzlePiece& second = pieces[match.secondPieceIndex];
+        const double lineWidth =
+            std::max(3.0, image.width() / 250.0);
 
-    const double factor = static_cast<double>(image.width()) / 1536.0;
-    const double lineWidth = std::max(5.0, 6.0 * factor);
+        highlight = targetScene->addPolygon(
+            contour,
+            QPen(
+                highlightColor,
+                lineWidth,
+                Qt::SolidLine,
+                Qt::RoundCap,
+                Qt::RoundJoin
+                ),
+            QColor(
+                highlightColor.red(),
+                highlightColor.green(),
+                highlightColor.blue(),
+                70
+                )
+            );
 
-    firstMatchingHighlight = scene->addPolygon(
-        first.contour,
-        QPen(QColor("#00FFFF"), lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin),
-        QColor(0, 255, 255, 100)
+        highlight->setZValue(10.0);
+    }
+
+    targetScene->setSceneRect(
+        transform.mapRect(QRectF(image.rect()))
         );
 
-    secondMatchingHighlight = scene->addPolygon(
-        second.contour,
-        QPen(QColor("#FF9800"), lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin),
-        QColor(255, 152, 0, 100)
+    targetView->fitInView(
+        targetScene->sceneRect(),
+        Qt::KeepAspectRatio
         );
+}
 
-    firstMatchingHighlight->setZValue(10.0);
-    secondMatchingHighlight->setZValue(10.0);
+void MainWindow::fitOriginalImages()
+{
+    if (!scene->sceneRect().isEmpty())
+        view->fitInView(
+            scene->sceneRect(),
+            Qt::KeepAspectRatio
+            );
+
+    if (!secondScene->sceneRect().isEmpty())
+        secondView->fitInView(
+            secondScene->sceneRect(),
+            Qt::KeepAspectRatio
+            );
 }

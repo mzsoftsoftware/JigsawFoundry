@@ -11,6 +11,8 @@ class QListWidget;
 class QGraphicsScene;
 class QGraphicsView;
 class QGraphicsPolygonItem;
+class QSplitter;
+class QCloseEvent;
 
 class MainWindow : public QMainWindow
 {
@@ -19,38 +21,64 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget* parent = nullptr);
 
+protected:
+    void closeEvent(QCloseEvent* event) override;
+
 private:
     void openImage();
     void detectPieces();
+
+    void updatePieceAnalyses();
+    void updateImageList();
+    void updateMatching();
+
     void showImage();
+    void showSecondImage();
     void showAlignedPieces();
+    void showMatchingPreview(int matchIndex);
+    void highlightMatchingPieces(int matchIndex);
+
+    void restoreLayout();
+    void saveLayout();
+
+    void showOriginalImage(
+        QGraphicsScene* targetScene,
+        QGraphicsView* targetView,
+        QGraphicsPolygonItem*& highlight,
+        const PuzzlePiece* selectedPiece,
+        const QColor& highlightColor
+        );
+
+    void fitOriginalImages();
+
+    QSplitter* mainSplitter = nullptr;
+    QSplitter* leftSplitter = nullptr;
+    QSplitter* rightSplitter = nullptr;
+
+    QListWidget* imageList = nullptr;
+    QListWidget* matchingList = nullptr;
 
     QGraphicsScene* scene = nullptr;
     QGraphicsView* view = nullptr;
 
-    QGraphicsScene* alignedScene = nullptr;
-    QGraphicsView* alignedView = nullptr;
-
-    QImage image;
-    QVector<PuzzlePiece> pieces;
-
-    void updateMatching();
-    void showMatchingPreview(int matchIndex);
-
-    QListWidget* matchingList = nullptr;
+    QGraphicsScene* secondScene = nullptr;
+    QGraphicsView* secondView = nullptr;
 
     QGraphicsScene* matchingScene = nullptr;
     QGraphicsView* matchingView = nullptr;
 
+    // Vorhandene Diagnoseansicht bleibt erhalten.
+    QGraphicsScene* alignedScene = nullptr;
+    QGraphicsView* alignedView = nullptr;
+
+    QString imagePath;
+    QImage image;
+
+    QVector<PuzzlePiece> pieces;
     QVector<PuzzleContourEdges> pieceAnalyses;
     QVector<double> pieceRotations;
     QVector<PuzzleBaseLines> pieceBaseLines;
-
-    void updatePieceAnalyses();
-
     QVector<PuzzleEdgeMatch> matches;
-
-    void highlightMatchingPieces(int matchIndex);
 
     QGraphicsPolygonItem* firstMatchingHighlight = nullptr;
     QGraphicsPolygonItem* secondMatchingHighlight = nullptr;

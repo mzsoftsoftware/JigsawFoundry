@@ -382,6 +382,64 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qcursor.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qbitmap.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qtabwidget.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QCloseEvent \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qevent.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcoreevent.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qbasictimer.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qeventloop.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdeadlinetimer.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiodevice.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qurl.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qeventpoint.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qvector2d.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qvectornd.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpointingdevice.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qinputdevice.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qscreen.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QList \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QObject \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QRect \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QSize \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QSizeF \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QTransform \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qnativeinterface.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qscreen_platform.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qguiapplication.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcoreapplication.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcoreapplication_platform.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qinputmethod.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qlocale.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qguiapplication_platform.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGroupBox \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgroupbox.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qframe.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QLabel \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlabel.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpicture.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qtextdocument.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QVBoxLayout \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qboxlayout.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlayout.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlayoutitem.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgridlayout.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QListWidgetItem \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistwidget.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistview.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemview.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qabstractitemmodel.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qitemselectionmodel.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qstyleoption.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractspinbox.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qvalidator.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qregularexpression.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qslider.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractslider.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qstyle.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qtabbar.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qrubberband.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QElapsedTimer \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qelapsedtimer.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDebug \
@@ -389,7 +447,6 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdir.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdirlisting.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qfiledevice.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiodevice.h \
  /usr/include/c++/16/filesystem /usr/include/c++/16/bits/fs_fwd.h \
  /usr/include/c++/16/bits/fs_path.h /usr/include/c++/16/locale \
  /usr/include/c++/16/bits/locale_facets.h /usr/include/c++/16/cwctype \
@@ -415,7 +472,6 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /usr/include/c++/16/bits/fs_dir.h /usr/include/c++/16/bits/fs_ops.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdatetime.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcalendar.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qlocale.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qfile.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qfileinfo.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtimezone.h \
@@ -426,30 +482,12 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qgraphicsitem.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpainterpath.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QListWidget \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistwidget.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qlistview.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemview.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractscrollarea.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qframe.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qabstractitemmodel.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qitemselectionmodel.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qstyleoption.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractspinbox.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qvalidator.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qregularexpression.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qslider.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qabstractslider.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qstyle.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qtabbar.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qrubberband.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsLineItem \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsPathItem \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsTextItem \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QAction \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QFileDialog \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qfiledialog.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qurl.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qdialog.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QFont \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QGraphicsPixmapItem \
@@ -475,29 +513,4 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QToolBar \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qtoolbar.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QTransform \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QWheelEvent \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qevent.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcoreevent.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qbasictimer.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qabstracteventdispatcher.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qeventloop.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdeadlinetimer.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qeventpoint.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qvector2d.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qvectornd.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpointingdevice.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qinputdevice.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qscreen.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QList \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QObject \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QRect \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QSize \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QSizeF \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QTransform \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qnativeinterface.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qscreen_platform.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qguiapplication.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcoreapplication.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcoreapplication_platform.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qinputmethod.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qguiapplication_platform.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QWheelEvent
