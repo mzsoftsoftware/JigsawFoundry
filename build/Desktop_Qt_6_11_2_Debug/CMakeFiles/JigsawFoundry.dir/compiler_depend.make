@@ -1996,8 +1996,11 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h \
+  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleImage.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QHash \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QMap \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QPointF \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QString \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q17memory.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q20bit.h \
@@ -2050,6 +2053,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qlist.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qlogging.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmalloc.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmap.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmargins.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qminmax.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qnamespace.h \
@@ -2063,6 +2067,9 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qrect.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qrefcount.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qscopedpointer.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qscopeguard.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qshareddata.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qshareddata_impl.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qsize.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qspan.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qstdlibdetection.h \
@@ -2105,11 +2112,13 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qyieldcpu.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QColor \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPixmap \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPolygonF \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qcolor.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qimage.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpaintdevice.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixelformat.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixmap.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpolygon.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qregion.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qrgb.h \
@@ -2278,11 +2287,14 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /usr/include/c++/16/bits/stl_iterator.h \
   /usr/include/c++/16/bits/stl_iterator_base_funcs.h \
   /usr/include/c++/16/bits/stl_iterator_base_types.h \
+  /usr/include/c++/16/bits/stl_map.h \
+  /usr/include/c++/16/bits/stl_multimap.h \
   /usr/include/c++/16/bits/stl_numeric.h \
   /usr/include/c++/16/bits/stl_pair.h \
   /usr/include/c++/16/bits/stl_raw_storage_iter.h \
   /usr/include/c++/16/bits/stl_relops.h \
   /usr/include/c++/16/bits/stl_tempbuf.h \
+  /usr/include/c++/16/bits/stl_tree.h \
   /usr/include/c++/16/bits/stl_uninitialized.h \
   /usr/include/c++/16/bits/stl_vector.h \
   /usr/include/c++/16/bits/stream_iterator.h \
@@ -2326,6 +2338,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /usr/include/c++/16/iosfwd \
   /usr/include/c++/16/iterator \
   /usr/include/c++/16/limits \
+  /usr/include/c++/16/map \
   /usr/include/c++/16/memory \
   /usr/include/c++/16/new \
   /usr/include/c++/16/numeric \
@@ -2904,6 +2917,8 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qapplication.h:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QColor:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QMap:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/16/include/xmmintrin.h:
 

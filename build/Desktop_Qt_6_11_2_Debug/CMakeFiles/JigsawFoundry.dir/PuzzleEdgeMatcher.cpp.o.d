@@ -2,6 +2,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: \
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.cpp \
  /usr/include/stdc-predef.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h \
+ /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleImage.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleDetector.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qimage.h \
@@ -324,6 +325,17 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qvector.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPixmap \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixmap.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qshareddata.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QString \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QColor \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QHash \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qhash.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qhash.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QMap \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmap.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qscopeguard.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qshareddata_impl.h \
+ /usr/include/c++/16/map /usr/include/c++/16/bits/stl_tree.h \
+ /usr/include/c++/16/bits/stl_map.h \
+ /usr/include/c++/16/bits/stl_multimap.h

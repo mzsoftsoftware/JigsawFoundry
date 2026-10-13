@@ -30,20 +30,15 @@ private:
     void openImage();
     void detectPieces();
 
-    void updatePieceAnalyses();
     void updateImageList();
     void updateMatching();
 
-    void showImage();
-    void showSecondImage();
-    void showAlignedPieces();
+    void showAlignedPieces(int imageIndex);
     void showMatchingPreview(int matchIndex);
     void highlightMatchingPieces(int matchIndex);
 
     void restoreLayout();
     void saveLayout();
-
-    void updateOriginalImages();
 
     void updateOriginalHighlight(
         QGraphicsPolygonItem* highlight,
@@ -83,8 +78,6 @@ private:
 
     int displayedFirstImageIndex = -1;
     int displayedSecondImageIndex = -1;
-
-    void updatePieceImageCache();
 
     void analyzeImage(PuzzleImage& puzzleImage);
 

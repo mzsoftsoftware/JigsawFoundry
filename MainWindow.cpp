@@ -600,167 +600,44 @@ void MainWindow::updateImageList()
 
 void MainWindow::detectPieces()
 {
-    if (image.isNull())
+    if (images.isEmpty())
     {
-        statusBar()->showMessage(tr("Bitte zuerst ein Bild öffnen."));
+        statusBar()->showMessage(tr("Bitte zuerst Bilder öffnen."));
         return;
     }
 
-    QElapsedTimer totalTimer;
-    QElapsedTimer stepTimer;
+    QElapsedTimer timer;
+    timer.start();
 
-    totalTimer.start();
+    for (PuzzleImage& puzzleImage : images)
+        analyzeImage(puzzleImage);
 
-    PuzzleDetector detector;
-
-    stepTimer.start();
-    pieces = detector.detect(image);
-    const qint64 detectionTime = stepTimer.elapsed();
-
-    stepTimer.restart();
-    updatePieceAnalyses();
-    updatePieceImageCache();
-    const qint64 analysisTime = stepTimer.elapsed();
+    displayedFirstImageIndex = -1;
+    displayedSecondImageIndex = -1;
 
     updateImageList();
-
-    stepTimer.restart();
-    updateOriginalImages();
-    const qint64 imageTime = stepTimer.elapsed();
-
-    stepTimer.restart();
     updateMatching();
-    const qint64 matchingTime = stepTimer.elapsed();
-
-    const qint64 totalTime = totalTimer.elapsed();
-
-    qInfo().noquote()
-        << QStringLiteral(
-               "JigsawFoundry: Erkennung=%1 ms, "
-               "Kantenanalyse=%2 ms, "
-               "Bild=%3 ms, "
-               "Matching=%5 ms, "
-               "Gesamt=%6 ms")
-               .arg(detectionTime)
-               .arg(analysisTime)
-               .arg(imageTime)
-               .arg(matchingTime)
-               .arg(totalTime);
 
     statusBar()->showMessage(
-        tr("%1 Puzzleteile | Erkennung: %2 ms | "
-           "Kantenanalyse: %3 ms | "
-           "Darstellung: %4 ms | "
-           "Matching: %5 ms | Gesamt: %6 ms")
-            .arg(pieces.size())
-            .arg(detectionTime)
-            .arg(analysisTime)
-            .arg(imageTime)
-            .arg(matchingTime)
-            .arg(totalTime)
+        tr("%1 Bilder neu analysiert in %2 ms.")
+            .arg(images.size())
+            .arg(timer.elapsed())
         );
 }
 
-void MainWindow::showImage()
+void MainWindow::showAlignedPieces(int imageIndex)
 {
-    scene->clear();
-    firstMatchingHighlight = nullptr;
-    secondMatchingHighlight = nullptr;
-
-    if (image.isNull())
+    if (imageIndex < 0 || imageIndex >= images.size())
         return;
 
-    QImage display = image.convertToFormat(QImage::Format_ARGB32);
+    const PuzzleImage& puzzleImage = images[imageIndex];
 
-    QPainter painter(&display);
-    painter.setRenderHint(QPainter::Antialiasing);
+    const QImage& image = puzzleImage.image;
+    const QVector<PuzzlePiece>& pieces = puzzleImage.pieces;
+    const QVector<PuzzleContourEdges>& pieceAnalyses = puzzleImage.analyses;
+    const QVector<double>& pieceRotations = puzzleImage.rotations;
+    const QVector<PuzzleBaseLines>& pieceBaseLines = puzzleImage.baseLines;
 
-    const double factor =
-        static_cast<double>(image.width()) / 1536.0;
-
-    const double lineWidth = std::max(1.5, 3.0 * factor);
-    const int radius = std::max(5, static_cast<int>(17 * factor));
-
-    const QTransform identity;
-
-    for (int pieceIndex = 0; pieceIndex < pieces.size(); ++pieceIndex)
-    {
-        const PuzzlePiece& piece = pieces[pieceIndex];
-        const PuzzleContourEdges& edges = pieceAnalyses[pieceIndex];
-
-        if (edges.valid)
-        {
-            drawContourEdges(
-                painter,
-                edges,
-                identity,
-                lineWidth,
-                false
-                );
-            drawEdgeLabels(
-                painter,
-                edges,
-                identity,
-                std::max(10.0, 16.0 * factor)
-                );
-        }
-        else
-        {
-            painter.setPen(QPen(QColor("#808080"), lineWidth));
-            painter.setBrush(Qt::NoBrush);
-            painter.drawPolygon(piece.contour);
-        }
-
-        painter.setPen(Qt::white);
-        painter.setBrush(QColor(0, 0, 0, 210));
-
-        painter.drawEllipse(piece.center, radius, radius);
-
-        QFont font = painter.font();
-        font.setPixelSize(std::max(8, static_cast<int>(19 * factor)));
-        font.setBold(true);
-        painter.setFont(font);
-
-        painter.drawText(
-            QRectF(
-                piece.center.x() - radius,
-                piece.center.y() - radius,
-                radius * 2,
-                radius * 2
-                ),
-            Qt::AlignCenter,
-            QString::number(piece.id)
-            );
-    }
-
-    painter.end();
-
-    scene->addPixmap(QPixmap::fromImage(display));
-    scene->setSceneRect(image.rect());
-
-    if (matchingList != nullptr)
-        highlightMatchingPieces(matchingList->currentRow());
-}
-
-void MainWindow::showSecondImage()
-{
-    secondScene->clear();
-    secondMatchingHighlight = nullptr;
-
-    if (image.isNull())
-        return;
-
-    secondScene->addPixmap(QPixmap::fromImage(image));
-    secondScene->setSceneRect(image.rect());
-
-    secondView->fitInView(
-        secondScene->sceneRect(),
-        Qt::KeepAspectRatio
-        );
-}
-
-void MainWindow::showAlignedPieces()
-{
     alignedScene->clear();
 
     if (image.isNull() || pieces.isEmpty())
@@ -970,75 +847,79 @@ void MainWindow::showAlignedPieces()
     }
 }
 
-void MainWindow::updatePieceAnalyses()
-{
-    pieceAnalyses.clear();
-    pieceRotations.clear();
-    pieceBaseLines.clear();
-
-    pieceAnalyses.reserve(pieces.size());
-    pieceRotations.reserve(pieces.size());
-    pieceBaseLines.reserve(pieces.size());
-
-    PuzzleEdgeDetector edgeDetector;
-
-    for (const PuzzlePiece& piece : pieces)
-    {
-        const double rotation =
-            edgeDetector.findRotation(piece.contour);
-
-        const PuzzleBaseLines lines =
-            edgeDetector.findBaseLines(piece.contour, rotation);
-
-        const PuzzleContourEdges edges =
-            edgeDetector.findContourEdges(
-                piece.contour,
-                rotation,
-                lines
-                );
-
-        pieceRotations.append(rotation);
-        pieceBaseLines.append(lines);
-        pieceAnalyses.append(edges);
-    }
-}
-
 void MainWindow::updateMatching()
 {
     matchingList->clear();
     matchingScene->clear();
     matches.clear();
 
-    if (pieces.isEmpty())
-        return;
-
     PuzzleEdgeMatcher matcher;
-    matches = matcher.findMatches(pieces, pieceAnalyses, image);
+    matches = matcher.findMatches(images);
 
-    const int maximumResults = std::min(200, static_cast<int>(matches.size()));
+    const int maximumResults =
+        std::min(200, static_cast<int>(matches.size()));
 
     for (int index = 0; index < maximumResults; ++index)
     {
         const PuzzleEdgeMatch& match = matches[index];
-        const PuzzlePiece& first = pieces[match.firstPieceIndex];
-        const PuzzlePiece& second = pieces[match.secondPieceIndex];
 
-        const QString prefix = match.mutualBestMatch
-                                   ? tr("★ ")
-                                   : QString();
+        const PuzzleImage& firstImage = images[match.firstImageIndex];
+        const PuzzleImage& secondImage = images[match.secondImageIndex];
 
-        const QString text =
-            prefix +
-            tr("Teil %1 / Kante %2  ↔  Teil %3 / Kante %4  |  G: %5  F: %6  Gesamt: %7")
+        const PuzzlePiece& first = firstImage.pieces[match.firstPieceIndex];
+        const PuzzlePiece& second = secondImage.pieces[match.secondPieceIndex];
+
+        const QString firstName = QFileInfo(firstImage.filePath).fileName();
+        const QString secondName = QFileInfo(secondImage.filePath).fileName();
+
+        const QString description =
+            tr("%1: Teil %2 / Kante %3\n%4: Teil %5 / Kante %6\nG: %7  F: %8  Gesamt: %9")
+                .arg(firstName)
                 .arg(first.id)
                 .arg(match.firstEdgeIndex + 1)
+                .arg(secondName)
                 .arg(second.id)
                 .arg(match.secondEdgeIndex + 1)
                 .arg(match.geometryScore, 0, 'f', 2)
                 .arg(match.colorScore, 0, 'f', 2)
                 .arg(match.score, 0, 'f', 2);
 
-        QListWidgetItem* item = new QListWidgetItem(text);
+        QPixmap preview(152, 80);
+        preview.fill(QColor(45, 48, 54));
+
+        QPainter painter(&preview);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+        const QPixmap& firstThumbnail =
+            firstImage.pieceThumbnails[match.firstPieceIndex];
+
+        const QPixmap& secondThumbnail =
+            secondImage.pieceThumbnails[match.secondPieceIndex];
+
+        const QPixmap firstScaled =
+            firstThumbnail.scaled(72, 72, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        const QPixmap secondScaled =
+            secondThumbnail.scaled(72, 72, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        painter.drawPixmap(
+            (76 - firstScaled.width()) / 2,
+            (80 - firstScaled.height()) / 2,
+            firstScaled
+            );
+
+        painter.drawPixmap(
+            76 + (76 - secondScaled.width()) / 2,
+            (80 - secondScaled.height()) / 2,
+            secondScaled
+            );
+
+        painter.end();
+
+        QListWidgetItem* item = new QListWidgetItem(
+            QIcon(preview),
+            description
+            );
 
         if (match.mutualBestMatch)
         {
@@ -1052,6 +933,8 @@ void MainWindow::updateMatching()
         matchingList->addItem(item);
     }
 
+    matchingList->setIconSize(QSize(152, 80));
+
     if (maximumResults > 0)
     {
         matchingList->setCurrentRow(0);
@@ -1063,33 +946,71 @@ void MainWindow::updateMatching()
         highlightMatchingPieces(-1);
     }
 
-    statusBar()->showMessage(tr("%1 Puzzleteile, %2 mögliche Kantenpaare")
-                                 .arg(pieces.size()).arg(matches.size()));
+    statusBar()->showMessage(
+        tr("%1 Bilder, %2 mögliche Kantenpaare")
+            .arg(images.size())
+            .arg(matches.size())
+        );
 }
 
 void MainWindow::showMatchingPreview(int matchIndex)
 {
     matchingScene->clear();
 
-    if (matchIndex < 0 || matchIndex >= matchingList->count() || matchIndex >= matches.size())
+    if (matchIndex < 0 ||
+        matchIndex >= matchingList->count() ||
+        matchIndex >= matches.size())
         return;
 
     const PuzzleEdgeMatch& match = matches[matchIndex];
-    const PuzzlePiece& first = pieces[match.firstPieceIndex];
-    const PuzzlePiece& second = pieces[match.secondPieceIndex];
-    const PuzzleContourEdges& firstAnalysis = pieceAnalyses[match.firstPieceIndex];
-    const PuzzleContourEdges& secondAnalysis = pieceAnalyses[match.secondPieceIndex];
-    const QPolygonF& firstEdge = firstAnalysis.edges[match.firstEdgeIndex];
-    const QPolygonF& secondEdge = secondAnalysis.edges[match.secondEdgeIndex];
+
+    if (match.firstImageIndex < 0 ||
+        match.firstImageIndex >= images.size() ||
+        match.secondImageIndex < 0 ||
+        match.secondImageIndex >= images.size())
+        return;
+
+    const PuzzleImage& firstSource = images[match.firstImageIndex];
+    const PuzzleImage& secondSource = images[match.secondImageIndex];
+
+    if (match.firstPieceIndex < 0 ||
+        match.firstPieceIndex >= firstSource.pieces.size() ||
+        match.secondPieceIndex < 0 ||
+        match.secondPieceIndex >= secondSource.pieces.size())
+        return;
+
+    const PuzzlePiece& first =
+        firstSource.pieces[match.firstPieceIndex];
+
+    const PuzzlePiece& second =
+        secondSource.pieces[match.secondPieceIndex];
+
+    const PuzzleContourEdges& firstAnalysis =
+        firstSource.analyses[match.firstPieceIndex];
+
+    const PuzzleContourEdges& secondAnalysis =
+        secondSource.analyses[match.secondPieceIndex];
+
+    if (match.firstEdgeIndex < 0 ||
+        match.firstEdgeIndex >= firstAnalysis.edges.size() ||
+        match.secondEdgeIndex < 0 ||
+        match.secondEdgeIndex >= secondAnalysis.edges.size())
+        return;
+
+    const QPolygonF& firstEdge =
+        firstAnalysis.edges[match.firstEdgeIndex];
+
+    const QPolygonF& secondEdge =
+        secondAnalysis.edges[match.secondEdgeIndex];
 
     if (firstEdge.size() < 2 || secondEdge.size() < 2)
         return;
 
     const QImage& firstImage =
-        pieceImageCache[match.firstPieceIndex];
+        firstSource.extractedPieces[match.firstPieceIndex];
 
     const QImage& secondImage =
-        pieceImageCache[match.secondPieceIndex];
+        secondSource.extractedPieces[match.secondPieceIndex];
 
     if (firstImage.isNull() || secondImage.isNull())
         return;
@@ -1108,8 +1029,8 @@ void MainWindow::showMatchingPreview(int matchIndex)
     const QPointF firstOffset = -first.center;
     const QPointF secondOffset = firstEnd + firstOffset - secondRotation.map(secondStart);
 
-    const QRect firstBounds = first.contour.boundingRect().adjusted(-2, -2, 2, 2).toAlignedRect().intersected(image.rect());
-    const QRect secondBounds = second.contour.boundingRect().adjusted(-2, -2, 2, 2).toAlignedRect().intersected(image.rect());
+    const QRect firstBounds = first.contour.boundingRect().adjusted(-2, -2, 2, 2).toAlignedRect().intersected(firstSource.image.rect());
+    const QRect secondBounds = second.contour.boundingRect().adjusted(-2, -2, 2, 2).toAlignedRect().intersected(secondSource.image.rect());
 
     QGraphicsPixmapItem* firstItem = matchingScene->addPixmap(QPixmap::fromImage(firstImage));
     firstItem->setPos(QPointF(firstBounds.topLeft()) + firstOffset);
@@ -1222,8 +1143,6 @@ void MainWindow::highlightMatchingPieces(int matchIndex)
         secondMatchingHighlight,
         &secondImage.pieces[match.secondPieceIndex]
         );
-
-    fitOriginalImages();
 }
 
 void MainWindow::fitOriginalImages()
@@ -1241,74 +1160,6 @@ void MainWindow::fitOriginalImages()
             );
 }
 
-void MainWindow::updateOriginalImages()
-{
-    scene->clear();
-    secondScene->clear();
-
-    firstImageItem = nullptr;
-    secondImageItem = nullptr;
-
-    firstMatchingHighlight = nullptr;
-    secondMatchingHighlight = nullptr;
-
-    originalPixmap = QPixmap();
-
-    if (image.isNull())
-        return;
-
-    originalPixmap = QPixmap::fromImage(image);
-
-    QTransform transform;
-
-    if (image.height() > image.width())
-    {
-        transform.rotate(90.0);
-    }
-
-    firstImageItem = scene->addPixmap(originalPixmap);
-    secondImageItem = secondScene->addPixmap(originalPixmap);
-
-    firstImageItem->setTransform(transform);
-    secondImageItem->setTransform(transform);
-
-    firstMatchingHighlight =
-        new QGraphicsPolygonItem(firstImageItem);
-
-    secondMatchingHighlight =
-        new QGraphicsPolygonItem(secondImageItem);
-
-    firstMatchingHighlight->setPen(
-        QPen(QColor("#00FFFF"), 30.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
-        );
-
-    secondMatchingHighlight->setPen(
-        QPen(QColor("#FF9800"), 20.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
-        );
-
-    firstMatchingHighlight->setBrush(
-        QColor(0, 255, 255, 100)
-        );
-
-    secondMatchingHighlight->setBrush(
-        QColor(255, 152, 0, 100)
-        );
-
-    firstMatchingHighlight->setZValue(10.0);
-    secondMatchingHighlight->setZValue(10.0);
-
-    firstMatchingHighlight->hide();
-    secondMatchingHighlight->hide();
-
-    const QRectF bounds =
-        transform.mapRect(QRectF(image.rect()));
-
-    scene->setSceneRect(bounds);
-    secondScene->setSceneRect(bounds);
-
-    fitOriginalImages();
-}
-
 void MainWindow::updateOriginalHighlight(
     QGraphicsPolygonItem* highlight,
     const PuzzlePiece* piece)
@@ -1324,19 +1175,6 @@ void MainWindow::updateOriginalHighlight(
 
     highlight->setPolygon(piece->contour);
     highlight->show();
-}
-
-void MainWindow::updatePieceImageCache()
-{
-    pieceImageCache.clear();
-    pieceImageCache.reserve(pieces.size());
-
-    for (const PuzzlePiece& piece : pieces)
-    {
-        pieceImageCache.append(
-            extractPiece(image, piece)
-            );
-    }
 }
 
 void MainWindow::analyzeImage(PuzzleImage& puzzleImage)
