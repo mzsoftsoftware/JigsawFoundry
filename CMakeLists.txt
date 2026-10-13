@@ -11,6 +11,7 @@ qt_add_executable(JigsawFoundry
     PuzzleDetector.h PuzzleDetector.cpp
     PuzzleEdgeDetector.h PuzzleEdgeDetector.cpp
     PuzzleEdgeMatcher.h PuzzleEdgeMatcher.cpp
+    PuzzleImage.h
 )
 target_link_libraries(JigsawFoundry PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets ${OpenCV_LIBS})
 target_include_directories(JigsawFoundry PRIVATE ${OpenCV_INCLUDE_DIRS})

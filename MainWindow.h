@@ -2,6 +2,7 @@
 
 #include "PuzzleDetector.h"
 #include "PuzzleEdgeMatcher.h"
+#include "PuzzleImage.h"
 
 #include <QImage>
 #include <QMainWindow>
@@ -71,25 +72,27 @@ private:
     QGraphicsScene* alignedScene = nullptr;
     QGraphicsView* alignedView = nullptr;
 
-    QString imagePath;
-    QImage image;
-
-    QVector<PuzzlePiece> pieces;
-    QVector<PuzzleContourEdges> pieceAnalyses;
-    QVector<double> pieceRotations;
-    QVector<PuzzleBaseLines> pieceBaseLines;
-    QVector<PuzzleEdgeMatch> matches;
-
     QGraphicsPolygonItem* firstMatchingHighlight = nullptr;
     QGraphicsPolygonItem* secondMatchingHighlight = nullptr;
-
-    QPixmap originalPixmap;
 
     QGraphicsPixmapItem* firstImageItem = nullptr;
     QGraphicsPixmapItem* secondImageItem = nullptr;
 
+    QVector<PuzzleImage> images;
+    QVector<PuzzleEdgeMatch> matches;
 
-    QVector<QImage> pieceImageCache;
+    int displayedFirstImageIndex = -1;
+    int displayedSecondImageIndex = -1;
 
     void updatePieceImageCache();
+
+    void analyzeImage(PuzzleImage& puzzleImage);
+
+    void displayOriginalImage(
+        int imageIndex,
+        QGraphicsScene* targetScene,
+        QGraphicsPixmapItem*& imageItem,
+        QGraphicsPolygonItem*& highlight,
+        const QColor& highlightColor
+        );
 };

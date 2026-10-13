@@ -325,6 +325,11 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qvector.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
+ /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleImage.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPixmap \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixmap.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qshareddata.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QString \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/QMainWindow \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qmainwindow.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -352,8 +357,6 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qaction.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qkeysequence.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qicon.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpixmap.h \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qshareddata.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qvariant.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdebug.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtextstream.h \

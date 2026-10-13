@@ -1,0 +1,517 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "JigsawFoundry"
+		}
+	],
+	"backtrace" : 4,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"_qt_internal_create_executable",
+			"qt6_add_executable",
+			"qt_add_executable",
+			"target_link_libraries",
+			"set_property",
+			"find_package",
+			"find_dependency",
+			"_qt_internal_find_third_party_dependencies",
+			"include",
+			"set_target_properties",
+			"add_compile_definitions",
+			"project",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib/cmake/Qt6Core/Qt6CoreMacros.cmake",
+			"CMakeLists.txt",
+			"/home/michael/Qt/Qt6.11/Tools/CMake/share/cmake-3.30/Modules/FindOpenGL.cmake",
+			"build/Desktop_Qt_6_11_2_Debug/.qtcreator/cmake-helper/maintenance_tool_provider.cmake",
+			"/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib/cmake/Qt6/FindWrapOpenGL.cmake",
+			"/home/michael/Qt/Qt6.11/Tools/CMake/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
+			"/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+			"/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib/cmake/Qt6Gui/Qt6GuiDependencies.cmake",
+			"/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake",
+			"/usr/lib/cmake/opencv5/OpenCVModules.cmake",
+			"/usr/lib/cmake/opencv5/OpenCVConfig.cmake",
+			"build/Desktop_Qt_6_11_2_Debug/.qtcreator/cmake-helper/qtcreator-project.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 8,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 1033,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 687,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 766,
+				"parent" : 3
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 16,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 3,
+				"line" : 235,
+				"parent" : 6
+			},
+			{
+				"file" : 8,
+				"parent" : 7
+			},
+			{
+				"command" : 9,
+				"file" : 8,
+				"line" : 40,
+				"parent" : 8
+			},
+			{
+				"file" : 7,
+				"parent" : 9
+			},
+			{
+				"command" : 8,
+				"file" : 7,
+				"line" : 38,
+				"parent" : 10
+			},
+			{
+				"command" : 7,
+				"file" : 6,
+				"line" : 36,
+				"parent" : 11
+			},
+			{
+				"command" : 6,
+				"file" : 5,
+				"line" : 76,
+				"parent" : 12
+			},
+			{
+				"command" : 6,
+				"file" : 3,
+				"line" : 283,
+				"parent" : 13
+			},
+			{
+				"file" : 4,
+				"parent" : 14
+			},
+			{
+				"command" : 6,
+				"file" : 4,
+				"line" : 13,
+				"parent" : 15
+			},
+			{
+				"command" : 6,
+				"file" : 3,
+				"line" : 283,
+				"parent" : 16
+			},
+			{
+				"file" : 2,
+				"parent" : 17
+			},
+			{
+				"command" : 5,
+				"file" : 2,
+				"line" : 712,
+				"parent" : 18
+			},
+			{
+				"command" : 10,
+				"file" : 2,
+				"line" : 710,
+				"parent" : 18
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 688,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 6,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 3,
+				"line" : 283,
+				"parent" : 22
+			},
+			{
+				"file" : 10,
+				"parent" : 23
+			},
+			{
+				"command" : 9,
+				"file" : 10,
+				"line" : 128,
+				"parent" : 24
+			},
+			{
+				"file" : 9,
+				"parent" : 25
+			},
+			{
+				"command" : 10,
+				"file" : 9,
+				"line" : 94,
+				"parent" : 26
+			},
+			{
+				"command" : 12,
+				"file" : 1,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"file" : 11,
+				"parent" : 28
+			},
+			{
+				"command" : 11,
+				"file" : 11,
+				"line" : 82,
+				"parent" : 29
+			},
+			{
+				"command" : 13,
+				"file" : 1,
+				"line" : 17,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -std=gnu++17 -fdiagnostics-color=always"
+				},
+				{
+					"backtrace" : 21,
+					"fragment" : "-fPIC"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 21,
+					"define" : "QT_CORE_LIB"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "QT_GUI_LIB"
+				},
+				{
+					"backtrace" : 30,
+					"define" : "QT_QML_DEBUG"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "QT_WIDGETS_LIB"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 0,
+					"path" : "/home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/JigsawFoundry_autogen/include"
+				},
+				{
+					"backtrace" : 31,
+					"isSystem" : true,
+					"path" : "/usr/include/opencv5"
+				},
+				{
+					"backtrace" : 21,
+					"isSystem" : true,
+					"path" : "/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore"
+				},
+				{
+					"backtrace" : 21,
+					"isSystem" : true,
+					"path" : "/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include"
+				},
+				{
+					"backtrace" : 21,
+					"isSystem" : true,
+					"path" : "/home/michael/Qt/Qt6.11/6.11.2/gcc_64/mkspecs/linux-g++"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					21,
+					21,
+					5
+				],
+				"standard" : "17"
+			},
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				3,
+				5,
+				7,
+				9
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"id" : "JigsawFoundry_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 0,
+			"id" : "JigsawFoundry_autogen::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "JigsawFoundry::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib/libQt6Widgets.so.6.11.2",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "/usr/lib/libopencv_imgproc.so.5.0.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib/libQt6Gui.so.6.11.2",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 19,
+				"fragment" : "/usr/lib/libGLX.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 20,
+				"fragment" : "/usr/lib/libOpenGL.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 21,
+				"fragment" : "/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib/libQt6Core.so.6.11.2",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 27,
+				"fragment" : "/usr/lib/libopencv_geometry.so.5.0.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 27,
+				"fragment" : "/usr/lib/libopencv_flann.so.5.0.0",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "/usr/lib/libopencv_core.so.5.0.0",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-Wl,-rpath-link,/home/michael/Qt/Qt6.11/6.11.2/gcc_64/lib",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "JigsawFoundry",
+	"nameOnDisk" : "JigsawFoundry",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files\\Generated",
+			"sourceIndexes" : 
+			[
+				0,
+				11
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				1,
+				3,
+				5,
+				7,
+				9
+			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				2,
+				4,
+				6,
+				8,
+				10
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				12
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"compileGroupIndex" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_11_2_Debug/JigsawFoundry_autogen/mocs_compilation.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "main.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"path" : "MainWindow.h",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "MainWindow.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"path" : "PuzzleDetector.h",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "PuzzleDetector.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"path" : "PuzzleEdgeDetector.h",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "PuzzleEdgeDetector.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"path" : "PuzzleEdgeMatcher.h",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "PuzzleEdgeMatcher.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"path" : "PuzzleImage.h",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_11_2_Debug/JigsawFoundry_autogen/timestamp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_11_2_Debug/JigsawFoundry_autogen/timestamp.rule",
+			"sourceGroupIndex" : 3
+		}
+	],
+	"type" : "EXECUTABLE"
+}

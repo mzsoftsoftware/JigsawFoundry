@@ -7,8 +7,10 @@ CMakeFiles/JigsawFoundry.dir/JigsawFoundry_autogen/mocs_compilation.cpp.o
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleDetector.h
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h
+ /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleImage.h
  /home/michael/Git/MZSoftware/JigsawFoundry/build/Desktop_Qt_6_11_2_Debug/JigsawFoundry_autogen/EWIEGA46WW/moc_MainWindow.cpp
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QPointF
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QString
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q17memory.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q20algorithm.h
@@ -143,6 +145,7 @@ CMakeFiles/JigsawFoundry.dir/JigsawFoundry_autogen/mocs_compilation.cpp.o
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qxptype_traits.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qyieldcpu.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPixmap
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPolygonF
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qaction.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qbitmap.h

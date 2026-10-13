@@ -8,8 +8,11 @@
 
 struct PuzzleEdgeMatch
 {
+    int firstImageIndex = -1;
     int firstPieceIndex = -1;
     int firstEdgeIndex = -1;
+
+    int secondImageIndex = -1;
     int secondPieceIndex = -1;
     int secondEdgeIndex = -1;
 
