@@ -325,4 +325,5 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qvector.h \
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QColor \
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QTransform
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QHash \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qhash.h

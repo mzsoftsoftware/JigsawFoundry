@@ -486,7 +486,9 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDebug \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDir \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QElapsedTimer \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QFileInfo \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QList \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QObject \
@@ -546,6 +548,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: /home/michael/Git/MZSoftware/Jigs
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdebug.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdir.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdirlisting.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qelapsedtimer.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qendian.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qeventloop.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qexceptionhandling.h \
@@ -1975,6 +1978,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h \
   /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QHash \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QPointF \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q17memory.h \
@@ -2019,6 +2023,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qgenericatomic.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qglobal.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qglobalstatic.h \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qhash.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qhashfunctions.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiodevicebase.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiterator.h \
@@ -2083,7 +2088,6 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QColor \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPolygonF \
-  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QTransform \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qcolor.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qimage.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpaintdevice.h \
@@ -2944,8 +2948,6 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 
 /usr/include/c++/16/bits/istream.tcc:
 
-/usr/include/c++/16/bits/fs_dir.h:
-
 /usr/include/c++/16/bits/basic_ios.h:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qstatusbar.h:
@@ -3042,8 +3044,6 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qcoreapplication.h:
 
-/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qbasictimer.h:
-
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qabstractitemmodel.h:
 
 /usr/include/opencv5/opencv2/core/matx.hpp:
@@ -3060,7 +3060,15 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QFileInfo:
 
+/usr/include/c++/16/bits/fs_dir.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QElapsedTimer:
+
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDir:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qbasictimer.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDebug:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qtoolbar.h:
 
@@ -3195,6 +3203,8 @@ CMakeFiles/JigsawFoundry.dir/main.cpp.o: /home/michael/Git/MZSoftware/JigsawFoun
 /usr/include/c++/16/optional:
 
 /usr/include/c++/16/numeric:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qelapsedtimer.h:
 
 /usr/include/c++/16/new:
 
@@ -3817,6 +3827,8 @@ JigsawFoundry_autogen/mocs_compilation.cpp:
 /usr/include/opencv5/opencv2/core/check.hpp:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qtresource.h:
+
+/home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QHash:
 
 /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qmap.h:
 

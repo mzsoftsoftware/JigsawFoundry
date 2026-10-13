@@ -382,6 +382,9 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o: \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qcursor.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qbitmap.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtWidgets/qtabwidget.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QElapsedTimer \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qelapsedtimer.h \
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDebug \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDir \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdir.h \
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdirlisting.h \

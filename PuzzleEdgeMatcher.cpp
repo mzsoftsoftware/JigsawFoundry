@@ -2,7 +2,7 @@
 
 #include <QColor>
 #include <QPointF>
-#include <QTransform>
+#include <QHash>
 
 #include <algorithm>
 #include <cmath>
@@ -94,6 +94,31 @@ EdgeProfile createProfile(const QPolygonF& contour)
 
     result.valid = true;
     return result;
+}
+
+double compareProfiles(const EdgeProfile& first, const EdgeProfile& second)
+{
+    if (!first.valid || !second.valid)
+        return std::numeric_limits<double>::infinity();
+
+    const double averageLength = (first.length + second.length) * 0.5;
+    const double lengthDifference = std::abs(first.length - second.length) / averageLength;
+
+    if (lengthDifference > 0.20)
+        return std::numeric_limits<double>::infinity();
+
+    double squaredError = 0.0;
+
+    for (int index = 0; index < SampleCount; ++index)
+    {
+        const double difference =
+            first.values[index] + second.values[SampleCount - 1 - index];
+
+        squaredError += difference * difference;
+    }
+
+    return std::sqrt(squaredError / SampleCount) * 100.0
+           + lengthDifference * 100.0;
 }
 
 QPointF pointAtFraction(const QPolygonF& contour, double fraction)
@@ -229,136 +254,25 @@ double compareColors(const ColorProfile& outward, const ColorProfile& inward)
     return count >= SampleCount / 2 ? error / count : std::numeric_limits<double>::infinity();
 }
 
-QPointF inwardNormal(const QPolygonF& edge, const QPointF& center)
-{
-    const QPointF start = edge.first();
-    const QPointF end = edge.last();
-    const QPointF chord = end - start;
 
-    const double length = std::hypot(chord.x(), chord.y());
-
-    if (length < 1e-9)
-        return QPointF();
-
-    const double cross =
-        chord.x() * (center.y() - start.y()) -
-        chord.y() * (center.x() - start.x());
-
-    const double sign = cross >= 0.0 ? 1.0 : -1.0;
-
-    return QPointF(
-        -chord.y() * sign / length,
-        chord.x() * sign / length
-        );
 }
 
-double compareAlignedColors(
-    const QImage& image,
-    const QPolygonF& firstEdge,
-    const QPointF& firstCenter,
-    const QPolygonF& secondEdge,
-    const QPointF& secondCenter)
-{
-    if (firstEdge.size() < 2 || secondEdge.size() < 2)
-        return std::numeric_limits<double>::infinity();
 
-    const QPointF firstNormal = inwardNormal(firstEdge, firstCenter);
-    const QPointF secondNormal = inwardNormal(secondEdge, secondCenter);
-
-    const double firstLength = distance(firstEdge.first(), firstEdge.last());
-    const double secondLength = distance(secondEdge.first(), secondEdge.last());
-
-    if (firstLength < 5.0 || secondLength < 5.0)
-        return std::numeric_limits<double>::infinity();
-
-    const double referenceLength = (firstLength + secondLength) * 0.5;
-
-    const double offsets[] = {
-        std::clamp(referenceLength * 0.02, 3.0, 8.0),
-        std::clamp(referenceLength * 0.04, 5.0, 12.0),
-        std::clamp(referenceLength * 0.07, 8.0, 18.0)
-    };
-
-    double totalError = 0.0;
-    int validPositions = 0;
-
-    for (int index = 0; index < SampleCount; ++index)
-    {
-        const double fraction = static_cast<double>(index) / (SampleCount - 1);
-
-        if (fraction < 0.08 || fraction > 0.92)
-            continue;
-
-        // Die zweite Kante wird in entgegengesetzter Richtung abgetastet.
-        const QPointF firstPoint = pointAtFraction(firstEdge, fraction);
-        const QPointF secondPoint = pointAtFraction(secondEdge, 1.0 - fraction);
-
-        double positionError = 0.0;
-        int validOffsets = 0;
-
-        for (const double offset : offsets)
-        {
-            LabColor firstColor;
-            LabColor secondColor;
-
-            if (!sampleLab(image, firstPoint + firstNormal * offset, firstColor))
-                continue;
-
-            if (!sampleLab(image, secondPoint + secondNormal * offset, secondColor))
-                continue;
-
-            const double dl = firstColor.l - secondColor.l;
-            const double da = firstColor.a - secondColor.a;
-            const double db = firstColor.b - secondColor.b;
-
-            positionError += std::sqrt(dl * dl + da * da + db * db);
-            ++validOffsets;
-        }
-
-        if (validOffsets == 0)
-            continue;
-
-        totalError += positionError / validOffsets;
-        ++validPositions;
-    }
-
-    return validPositions >= SampleCount / 2
-               ? totalError / validPositions
-               : std::numeric_limits<double>::infinity();
-}
-}
-
-double PuzzleEdgeMatcher::compareEdges(const QPolygonF& outward, const QPolygonF& inward) const
-{
-    const EdgeProfile first = createProfile(outward);
-    const EdgeProfile second = createProfile(inward);
-    if (!first.valid || !second.valid)
-        return std::numeric_limits<double>::infinity();
-
-    const double averageLength = (first.length + second.length) * 0.5;
-    const double lengthDifference = std::abs(first.length - second.length) / averageLength;
-    if (lengthDifference > 0.20)
-        return std::numeric_limits<double>::infinity();
-
-    double squaredError = 0.0;
-    for (int index = 0; index < SampleCount; ++index)
-    {
-        const double difference = first.values[index] + second.values[SampleCount - 1 - index];
-        squaredError += difference * difference;
-    }
-    return std::sqrt(squaredError / SampleCount) * 100.0 + lengthDifference * 100.0;
-}
-
-QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiece>& pieces, const QVector<PuzzleContourEdges>& analyses, const QImage& image) const
+QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
+    const QVector<PuzzlePiece>& pieces,
+    const QVector<PuzzleContourEdges>& analyses,
+    const QImage& image) const
 {
     QVector<PuzzleEdgeMatch> matches;
+
     if (pieces.size() != analyses.size() || image.isNull())
         return matches;
 
     struct CandidateEdge
     {
-        int pieceIndex;
-        int edgeIndex;
+        int pieceIndex = -1;
+        int edgeIndex = -1;
+        EdgeProfile geometry;
         ColorProfile colors;
     };
 
@@ -368,17 +282,40 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiec
     for (int pieceIndex = 0; pieceIndex < pieces.size(); ++pieceIndex)
     {
         const PuzzleContourEdges& analysis = analyses[pieceIndex];
+
         if (!analysis.usableForMatching)
             continue;
 
-        const int count = std::min(static_cast<int>(analysis.edges.size()), static_cast<int>(analysis.classifications.size()));
+        const int count = std::min(
+            static_cast<int>(analysis.edges.size()),
+            static_cast<int>(analysis.classifications.size())
+            );
+
         for (int edgeIndex = 0; edgeIndex < count; ++edgeIndex)
         {
-            const PuzzleEdgeType type = analysis.classifications[edgeIndex].type;
-            if (type != PuzzleEdgeType::Outward && type != PuzzleEdgeType::Inward)
+            const PuzzleEdgeType type =
+                analysis.classifications[edgeIndex].type;
+
+            if (type != PuzzleEdgeType::Outward &&
+                type != PuzzleEdgeType::Inward)
                 continue;
 
-            CandidateEdge candidate = {pieceIndex, edgeIndex, createColorProfile(image, analysis.edges[edgeIndex], pieces[pieceIndex].center)};
+            const QPolygonF& edge = analysis.edges[edgeIndex];
+
+            CandidateEdge candidate;
+            candidate.pieceIndex = pieceIndex;
+            candidate.edgeIndex = edgeIndex;
+            candidate.geometry = createProfile(edge);
+
+            if (!candidate.geometry.valid)
+                continue;
+
+            candidate.colors = createColorProfile(
+                image,
+                edge,
+                pieces[pieceIndex].center
+                );
+
             if (type == PuzzleEdgeType::Outward)
                 outwardEdges.append(candidate);
             else
@@ -393,15 +330,21 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiec
             if (first.pieceIndex == second.pieceIndex)
                 continue;
 
-            const double geometry = compareEdges(analyses[first.pieceIndex].edges[first.edgeIndex], analyses[second.pieceIndex].edges[second.edgeIndex]);
-            if (!std::isfinite(geometry))
+            const double geometry =
+                compareProfiles(first.geometry, second.geometry);
+
+            if (!std::isfinite(geometry) || geometry > 10.0)
                 continue;
 
-            const double previousColor = compareColors(first.colors, second.colors);
+            const double color =
+                compareColors(first.colors, second.colors);
 
-            const double color = std::numeric_limits<double>::infinity();
+            if (!std::isfinite(color) || color > 25.0)
+                continue;
 
-            if (!std::isfinite(previousColor))
+            const double score = geometry + ColorWeight * color;
+
+            if (score > 15.0)
                 continue;
 
             PuzzleEdgeMatch match;
@@ -410,59 +353,56 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiec
             match.secondPieceIndex = second.pieceIndex;
             match.secondEdgeIndex = second.edgeIndex;
             match.geometryScore = geometry;
-            match.colorScore = previousColor;
-            match.previousColorScore = color;
-            match.score = geometry + ColorWeight * previousColor;
+            match.colorScore = color;
+            match.previousColorScore =
+                std::numeric_limits<double>::infinity();
+            match.score = score;
 
-            if (match.geometryScore > 10.0)
-                continue;
-
-            if (match.colorScore > 25.0)
-                continue;
-
-            if (match.score > 15.0)
-                continue;
             matches.append(match);
         }
     }
 
-    std::sort(matches.begin(), matches.end(), [](const PuzzleEdgeMatch& first, const PuzzleEdgeMatch& second) { return first.score < second.score; });
-
-
-    for (int index = 0; index < matches.size(); ++index)
-    {
-        PuzzleEdgeMatch& current = matches[index];
-
-        bool bestForFirst = true;
-        bool bestForSecond = true;
-
-        for (int otherIndex = 0; otherIndex < matches.size(); ++otherIndex)
+    std::sort(
+        matches.begin(),
+        matches.end(),
+        [](const PuzzleEdgeMatch& first, const PuzzleEdgeMatch& second)
         {
-            if (index == otherIndex)
-                continue;
-
-            const PuzzleEdgeMatch& other = matches[otherIndex];
-
-            if (other.score >= current.score)
-                continue;
-
-            if (other.firstPieceIndex == current.firstPieceIndex &&
-                other.firstEdgeIndex == current.firstEdgeIndex)
-            {
-                bestForFirst = false;
-            }
-
-            if (other.secondPieceIndex == current.secondPieceIndex &&
-                other.secondEdgeIndex == current.secondEdgeIndex)
-            {
-                bestForSecond = false;
-            }
-
-            if (!bestForFirst && !bestForSecond)
-                break;
+            return first.score < second.score;
         }
+        );
 
-        current.mutualBestMatch = bestForFirst && bestForSecond;
+    // Die Treffer sind bereits aufsteigend nach Score sortiert.
+    // Die erste gefundene Verwendung einer Kante ist deshalb
+    // automatisch deren bester Treffer.
+
+    QHash<quint64, double> bestOutward;
+    QHash<quint64, double> bestInward;
+
+    for (PuzzleEdgeMatch& match : matches)
+    {
+        const quint64 outwardKey =
+            (static_cast<quint64>(match.firstPieceIndex) << 32) |
+            static_cast<quint32>(match.firstEdgeIndex);
+
+        const quint64 inwardKey =
+            (static_cast<quint64>(match.secondPieceIndex) << 32) |
+            static_cast<quint32>(match.secondEdgeIndex);
+
+        const bool firstIsBest =
+            !bestOutward.contains(outwardKey) ||
+            bestOutward.value(outwardKey) >= match.score;
+
+        const bool secondIsBest =
+            !bestInward.contains(inwardKey) ||
+            bestInward.value(inwardKey) >= match.score;
+
+        match.mutualBestMatch = firstIsBest && secondIsBest;
+
+        if (!bestOutward.contains(outwardKey))
+            bestOutward.insert(outwardKey, match.score);
+
+        if (!bestInward.contains(inwardKey))
+            bestInward.insert(inwardKey, match.score);
     }
 
     std::stable_sort(

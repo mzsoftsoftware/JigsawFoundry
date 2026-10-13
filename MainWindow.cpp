@@ -3,6 +3,8 @@
 #include "PuzzleEdgeDetector.h"
 #include "PuzzleEdgeMatcher.h"
 
+#include <QElapsedTimer>
+#include <QDebug>
 #include <QDir>
 #include <QSettings>
 #include <QFileInfo>
@@ -382,16 +384,52 @@ void MainWindow::detectPieces()
         return;
     }
 
-    PuzzleDetector detector;
-    pieces = detector.detect(image);
+    QElapsedTimer totalTimer;
+    QElapsedTimer stepTimer;
 
+    totalTimer.start();
+
+    PuzzleDetector detector;
+
+    stepTimer.start();
+    pieces = detector.detect(image);
+    const qint64 detectionTime = stepTimer.elapsed();
+
+    stepTimer.restart();
     showImage();
+    const qint64 imageTime = stepTimer.elapsed();
+
+    stepTimer.restart();
     showAlignedPieces();
+    const qint64 alignmentTime = stepTimer.elapsed();
+
+    stepTimer.restart();
     updateMatching();
+    const qint64 matchingTime = stepTimer.elapsed();
+
+    const qint64 totalTime = totalTimer.elapsed();
+
+    qInfo().noquote()
+        << QStringLiteral(
+               "JigsawFoundry: Erkennung=%1 ms, "
+               "Bild=%2 ms, "
+               "Ausrichtung/Darstellung=%3 ms, "
+               "Matching=%4 ms, "
+               "Gesamt=%5 ms")
+               .arg(detectionTime)
+               .arg(imageTime)
+               .arg(alignmentTime)
+               .arg(matchingTime)
+               .arg(totalTime);
 
     statusBar()->showMessage(
-        tr("%1 Puzzleteile erkannt und ausgerichtet")
+        tr("%1 Puzzleteile erkannt | Erkennung: %2 ms | "
+           "Darstellung: %3 ms | Matching: %4 ms | Gesamt: %5 ms")
             .arg(pieces.size())
+            .arg(detectionTime)
+            .arg(imageTime + alignmentTime)
+            .arg(matchingTime)
+            .arg(totalTime)
         );
 }
 

@@ -488,7 +488,9 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleDetector.h
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDebug
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QDir
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QElapsedTimer
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QFileInfo
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QList
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QObject
@@ -548,6 +550,7 @@ CMakeFiles/JigsawFoundry.dir/MainWindow.cpp.o
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdebug.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdir.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qdirlisting.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qelapsedtimer.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qendian.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qeventloop.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qexceptionhandling.h
@@ -1980,6 +1983,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleDetector.h
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeDetector.h
  /home/michael/Git/MZSoftware/JigsawFoundry/PuzzleEdgeMatcher.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QHash
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QPointF
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/QVector
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/q17memory.h
@@ -2024,6 +2028,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qgenericatomic.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qglobal.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qglobalstatic.h
+ /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qhash.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qhashfunctions.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiodevicebase.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtCore/qiterator.h
@@ -2088,7 +2093,6 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QColor
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPolygonF
- /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QTransform
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qcolor.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qimage.h
  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpaintdevice.h

@@ -27,5 +27,4 @@ public:
     QVector<PuzzleEdgeMatch> findMatches(const QVector<PuzzlePiece>& pieces, const QVector<PuzzleContourEdges>& analyses, const QImage& image) const;
 
 private:
-    double compareEdges(const QPolygonF& outward, const QPolygonF& inward) const;
 };
