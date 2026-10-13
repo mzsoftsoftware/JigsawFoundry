@@ -2083,6 +2083,7 @@ CMakeFiles/JigsawFoundry.dir/PuzzleEdgeMatcher.cpp.o: /home/michael/Git/MZSoftwa
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QColor \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QImage \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QPolygonF \
+  /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/QTransform \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qcolor.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qimage.h \
   /home/michael/Qt/Qt6.11/6.11.2/gcc_64/include/QtGui/qpaintdevice.h \

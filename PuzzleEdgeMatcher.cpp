@@ -407,7 +407,7 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiec
                 pieces[second.pieceIndex].center
                 );
 
-            if (!std::isfinite(color))
+            if (!std::isfinite(previousColor))
                 continue;
 
             PuzzleEdgeMatch match;
@@ -416,9 +416,9 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(const QVector<PuzzlePiec
             match.secondPieceIndex = second.pieceIndex;
             match.secondEdgeIndex = second.edgeIndex;
             match.geometryScore = geometry;
-            match.colorScore = color;
-            match.previousColorScore = previousColor;
-            match.score = geometry + ColorWeight * color;
+            match.colorScore = previousColor;
+            match.previousColorScore = color;
+            match.score = geometry + ColorWeight * previousColor;
 
             if (match.geometryScore > 10.0)
                 continue;
