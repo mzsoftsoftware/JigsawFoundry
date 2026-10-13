@@ -934,8 +934,8 @@ void MainWindow::updateMatching()
         const QString description =
             tr("%1: Teil %2 / Kante %3\n"
                "%4: Teil %5 / Kante %6\n"
-               "G: %7  K: %8  Gmax: %9  Gnase: %10\n"
-               "L: %11%  F: %12  FK: %13  Gesamt: %14")
+               "G: %7  K: %8  Gmax: %9  Gnase: %10  G2D: %11\n"
+               "L: %12%  F: %13  FK: %14  Gesamt: %15")
                 .arg(firstName)
                 .arg(first.id)
                 .arg(match.firstEdgeIndex + 1)
@@ -946,6 +946,7 @@ void MainWindow::updateMatching()
                 .arg(match.contourScore, 0, 'f', 2)
                 .arg(match.maximumGeometryScore, 0, 'f', 2)
                 .arg(match.noseGeometryScore, 0, 'f', 2)
+                .arg(match.geometry2DScore, 0, 'f', 2)
                 .arg(match.lengthScore, 0, 'f', 2)
                 .arg(match.colorScore, 0, 'f', 2)
                 .arg(match.calibratedColorScore, 0, 'f', 2)

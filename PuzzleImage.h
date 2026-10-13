@@ -38,6 +38,7 @@ struct PuzzleCachedEdge
 
     PuzzleEdgeGeometryProfile geometry;
     PuzzleEdgeColorProfile colors;
+    QVector<QPointF> contour2D;
 };
 
 struct PuzzleImage

@@ -15,6 +15,7 @@ struct PuzzleEdgeMatch
     int secondEdgeIndex = -1;
 
     double geometryScore = 0.0;
+    double geometry2DScore = 0.0;
     double maximumGeometryScore = 0.0;
     double noseGeometryScore = 0.0;
     double contourScore = 0.0;

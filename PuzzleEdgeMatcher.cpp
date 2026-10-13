@@ -124,6 +124,148 @@ EdgeProfile createProfile(const QPolygonF& contour)
     return result;
 }
 
+QVector<QPointF> createContour2D(const QPolygonF& contour)
+{
+    QVector<QPointF> result;
+
+    if (contour.size() < 3)
+        return result;
+
+    const QPointF start = contour.first();
+    const QPointF end = contour.last();
+
+    const double dx = end.x() - start.x();
+    const double dy = end.y() - start.y();
+    const double lengthSquared = dx * dx + dy * dy;
+
+    if (lengthSquared < 25.0)
+        return result;
+
+    result.reserve(contour.size());
+
+    for (const QPointF& point : contour)
+    {
+        const double px = point.x() - start.x();
+        const double py = point.y() - start.y();
+
+        const double x = (px * dx + py * dy) / lengthSquared;
+        const double y = (dx * py - dy * px) / lengthSquared;
+
+        result.append(QPointF(x, y));
+    }
+
+    return result;
+}
+
+double distanceToContour2D(
+    const QPointF& point,
+    const QVector<QPointF>& contour)
+{
+    if (contour.size() < 2)
+        return std::numeric_limits<double>::infinity();
+
+    double minimumSquaredDistance =
+        std::numeric_limits<double>::infinity();
+
+    for (int index = 1; index < contour.size(); ++index)
+    {
+        const QPointF start = contour[index - 1];
+        const QPointF end = contour[index];
+
+        const QPointF direction = end - start;
+        const QPointF offset = point - start;
+
+        const double lengthSquared =
+            direction.x() * direction.x() +
+            direction.y() * direction.y();
+
+        double fraction = 0.0;
+
+        if (lengthSquared > 1e-12)
+        {
+            fraction =
+                (offset.x() * direction.x() +
+                 offset.y() * direction.y()) / lengthSquared;
+
+            fraction = qBound(0.0, fraction, 1.0);
+        }
+
+        const QPointF nearest = start + direction * fraction;
+        const QPointF difference = point - nearest;
+
+        const double squaredDistance =
+            difference.x() * difference.x() +
+            difference.y() * difference.y();
+
+        minimumSquaredDistance =
+            qMin(minimumSquaredDistance, squaredDistance);
+    }
+
+    return qSqrt(minimumSquaredDistance);
+}
+
+double compareContours2D(
+    const QVector<QPointF>& outward,
+    const QVector<QPointF>& inward)
+{
+    if (outward.size() < 3 || inward.size() < 3)
+        return std::numeric_limits<double>::infinity();
+
+    // Die Einbuchtung wird in Gegenrichtung durchlaufen.
+    // Dadurch entsprechen ihre Endpunkte den Endpunkten
+    // der Nase. Die lokale Y-Richtung wird ebenfalls umgekehrt.
+
+    QVector<QPointF> reversedInward;
+    reversedInward.reserve(inward.size());
+
+    for (int index = inward.size() - 1; index >= 0; --index)
+    {
+        const QPointF& point = inward[index];
+
+        reversedInward.append(
+            QPointF(1.0 - point.x(), -point.y())
+            );
+    }
+
+    double squaredError = 0.0;
+    int count = 0;
+
+    // Richtung 1: Nase gegen Einbuchtung.
+
+    for (const QPointF& point : outward)
+    {
+        const double distance =
+            distanceToContour2D(point, reversedInward);
+
+        if (!qIsFinite(distance))
+            return std::numeric_limits<double>::infinity();
+
+        squaredError += distance * distance;
+        ++count;
+    }
+
+    // Richtung 2: Einbuchtung gegen Nase.
+    // Dadurch berücksichtigen wir auch Bereiche, die
+    // nur an einer der beiden Konturen vorhanden sind.
+
+    for (const QPointF& point : reversedInward)
+    {
+        const double distance =
+            distanceToContour2D(point, outward);
+
+        if (!qIsFinite(distance))
+            return std::numeric_limits<double>::infinity();
+
+        squaredError += distance * distance;
+        ++count;
+    }
+
+    if (count == 0)
+        return std::numeric_limits<double>::infinity();
+
+    return qSqrt(squaredError / count) * 100.0;
+}
+
 double calculateLengthDifference(const EdgeProfile& first, const EdgeProfile& second, double firstScale, double secondScale)
 {
     if (!first.valid || !second.valid || firstScale <= 0.0 || secondScale <= 0.0)
@@ -650,6 +792,11 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
             if (score > 15.0)
                 continue;
 
+            const double geometry2D = compareContours2D(
+                firstEdge.contour2D,
+                secondEdge.contour2D
+                );
+
             PuzzleEdgeMatch match;
 
             match.firstImageIndex = first.imageIndex;
@@ -661,6 +808,7 @@ QVector<PuzzleEdgeMatch> PuzzleEdgeMatcher::findMatches(
             match.secondEdgeIndex = secondEdge.edgeIndex;
 
             match.geometryScore = geometry;
+            match.geometry2DScore = geometry2D;
             match.contourScore = contour;
             match.maximumGeometryScore =
                 detailedGeometryValid ? maximumGeometry : std::numeric_limits<double>::quiet_NaN();
@@ -822,6 +970,8 @@ void PuzzleEdgeMatcher::prepareImage(
 
             if (!cachedEdge.geometry.valid)
                 continue;
+
+            cachedEdge.contour2D = createContour2D(edge);
 
             cachedEdge.colors = createColorProfile(
                 puzzleImage.image,
