@@ -1572,6 +1572,10 @@ void MainWindow::analyzeImage(PuzzleImage& puzzleImage)
 
     puzzleImage.pieces =
         detector.detect(puzzleImage.image);
+    detector.detectTopContours(
+        puzzleImage.image,
+        puzzleImage.pieces
+        );
 
     puzzleImage.pixmap =
         QPixmap::fromImage(puzzleImage.image);
@@ -1697,6 +1701,8 @@ void MainWindow::displayOriginalImage(
             QRectF(puzzleImage.image.rect())
             )
         );
+
+    showContourDiagnostics(imageIndex, imageItem);
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
@@ -1707,4 +1713,77 @@ void MainWindow::resizeEvent(QResizeEvent* event)
                        {
                            fitOriginalImages();
                        });
+}
+
+void MainWindow::showContourDiagnostics(
+    int imageIndex,
+    QGraphicsPixmapItem* imageItem)
+{
+    if (imageIndex < 0 ||
+        imageIndex >= images.size() ||
+        imageItem == nullptr)
+        return;
+
+    const PuzzleImage& puzzleImage = images[imageIndex];
+
+    QPen originalPen(QColor("#FF9800"), 2.0);
+    originalPen.setCosmetic(true);
+    originalPen.setJoinStyle(Qt::RoundJoin);
+
+    QPen topPen(QColor("#00FF66"), 2.0);
+    topPen.setCosmetic(true);
+    topPen.setJoinStyle(Qt::RoundJoin);
+    topPen.setCapStyle(Qt::RoundCap);
+
+    for (const PuzzlePiece& piece : puzzleImage.pieces)
+    {
+        if (piece.contour.size() < 3)
+            continue;
+
+        // Bisherige Kontur: Orange.
+
+        QGraphicsPolygonItem* originalContour =
+            new QGraphicsPolygonItem(piece.contour, imageItem);
+
+        originalContour->setPen(originalPen);
+        originalContour->setBrush(Qt::NoBrush);
+        originalContour->setZValue(20.0);
+
+        // Neue Oberkanten-Kandidaten: Grün.
+        // Ungültige Abschnitte bleiben bewusst frei.
+
+        if (piece.topContour.size() != piece.contour.size() ||
+            piece.topContourValid.size() != piece.contour.size())
+            continue;
+
+        QPainterPath path;
+        bool previousValid = false;
+
+        for (int index = 0; index <= piece.topContour.size(); ++index)
+        {
+            const int current = index % piece.topContour.size();
+
+            if (!piece.topContourValid[current])
+            {
+                previousValid = false;
+                continue;
+            }
+
+            const QPointF point = piece.topContour[current];
+
+            if (!previousValid)
+                path.moveTo(point);
+            else
+                path.lineTo(point);
+
+            previousValid = true;
+        }
+
+        QGraphicsPathItem* topContour =
+            new QGraphicsPathItem(path, imageItem);
+
+        topContour->setPen(topPen);
+        topContour->setBrush(Qt::NoBrush);
+        topContour->setZValue(21.0);
+    }
 }

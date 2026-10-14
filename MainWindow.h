@@ -48,6 +48,11 @@ private:
 
     void fitOriginalImages();
 
+    void showContourDiagnostics(
+        int imageIndex,
+        QGraphicsPixmapItem* imageItem
+        );
+
     QSplitter* mainSplitter = nullptr;
     QSplitter* leftSplitter = nullptr;
     QSplitter* rightSplitter = nullptr;

@@ -28,10 +28,15 @@ struct PuzzlePiece
     QPointF center;
     QVector<QPointF> corners;
     QVector<PuzzleEdge> edges;
+    QPolygonF topContour;
+    QVector<bool> topContourValid;
 };
 
 class PuzzleDetector
 {
 public:
     QVector<PuzzlePiece> detect(const QImage& image) const;
+    void detectTopContours(
+        const QImage& image,
+        QVector<PuzzlePiece>& pieces) const;
 };
